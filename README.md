@@ -1,2 +1,2 @@
 # MyVault
-This is a brand new idea when I always keep checking my bank, my wallet, etc. At first, I decide to make a Excel file to track where all my money went for? But, I feel exhausted when I need to edit everyday, So I decide to make this application.
+MyVault started from a simple problem: I was constantly checking my bank accounts, cash, and investments without having a clear picture of my finances. I first built an Excel tracker, but updating it every day became exhausting. That's why I decided to build MyVault — a personal finance operating system that makes tracking money simple, organized, and enjoyable.
