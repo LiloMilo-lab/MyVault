@@ -1,4 +1,5 @@
-import Sidebar from "@/components/layout/sidebar";
+import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
 
 export default function Home() {
   return (
@@ -6,17 +7,23 @@ export default function Home() {
 
       <Sidebar />
 
-      <section className="flex-1 p-10">
+      <div className="flex flex-1 flex-col">
 
-        <h1 className="text-4xl font-bold text-white">
-          Dashboard
-        </h1>
+        <Header />
 
-        <p className="mt-2 text-neutral-400">
-          Welcome back to MyVault.
-        </p>
+        <section className="flex-1 p-8">
 
-      </section>
+          <div className="rounded-2xl border border-dashed border-neutral-700 h-[500px] flex items-center justify-center">
+
+            <span className="text-neutral-500 text-lg">
+              Dashboard Content Coming Soon...
+            </span>
+
+          </div>
+
+        </section>
+
+      </div>
 
     </main>
   );
