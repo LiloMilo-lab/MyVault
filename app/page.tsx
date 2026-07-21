@@ -10,10 +10,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import TransactionModal from "@/components/dashboard/TransactionModal";
+import TransactionList from "@/components/transactions/TransactionList";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [cash, setCash] = useState(2300000);
+  const [transactions, setTransactions] = useState<number[]>([]);
 
   return (
     <main className="flex min-h-screen bg-neutral-950">
@@ -49,6 +51,10 @@ export default function Home() {
             icon={TrendingUp}
             />
 
+            <TransactionList
+              transactions={transactions}
+            /> 
+
             <button
               onClick={() => setIsOpen(true)}
               className="mt-8 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-black transition hover:bg-emerald-400"
@@ -60,6 +66,8 @@ export default function Home() {
                 setIsOpen={setIsOpen}
                 cash={cash}
                 setCash={setCash}
+                transactions={transactions}
+                setTransactions={setTransactions}
               />
           </div>
 

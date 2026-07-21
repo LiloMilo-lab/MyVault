@@ -5,15 +5,21 @@ import { useState } from "react";
 type TransactionModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
   cash: number;
   setCash: React.Dispatch<React.SetStateAction<number>>;
+
+  transactions: number[];
+  setTransactions: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
 export default function TransactionModal({
-  isOpen,
-  setIsOpen,
-  cash,
-  setCash,
+    isOpen,
+    setIsOpen,
+    cash,
+    setCash,
+    transactions,
+    setTransactions,
 }: TransactionModalProps) {
   const [amount, setAmount] = useState("");
 
@@ -62,6 +68,7 @@ export default function TransactionModal({
               if (!amount) return;
 
               setCash(cash + Number(amount));
+                setTransactions([...transactions, Number(amount)]);
               setAmount("");
               setIsOpen(false);
             }}
