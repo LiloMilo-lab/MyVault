@@ -7,9 +7,6 @@ type TransactionModalProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
-  cash: number;
-  setCash: React.Dispatch<React.SetStateAction<number>>;
-
   transactions: Transaction[];
   setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
 };
@@ -17,8 +14,6 @@ type TransactionModalProps = {
 export default function TransactionModal({
     isOpen,
     setIsOpen,
-    cash,
-    setCash,
     transactions,
     setTransactions,
 }: TransactionModalProps) {
@@ -105,19 +100,13 @@ export default function TransactionModal({
           <button
                 onClick={() => {
                     if (!amount) return;
-
-                    if (type === "Income") {
-                        setCash(cash + Number(amount));
-                    } else {
-                        setCash(cash - Number(amount));
-                    }
-
                     setTransactions([
                     ...transactions,
                     {
                         amount: Number(amount),
                         category,
                         type,
+                        date: new Date().toISOString(),
                     },
                     ]);
 

@@ -8,15 +8,68 @@ import {
   Landmark,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TransactionModal from "@/components/dashboard/TransactionModal";
 import TransactionList from "@/components/transactions/TransactionList";
 import {Transaction} from "@/types/transaction";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
-  const [cash, setCash] = useState(2300000);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [mounted, setMounted] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    if (typeof window === "undefined") return [];
+
+    const saved = localStorage.getItem("transactions");
+
+    return saved ? JSON.parse(saved) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem(
+      "transactions", 
+      JSON.stringify(transactions)
+    );
+  }, [transactions]);
+
+  useEffect(() => {
+    setMounted(true);
+
+    const saved = localStorage.getItem("transactions");
+
+    if (saved) {
+      setTransactions(JSON.parse(saved));
+    }
+  }, []);
+
+  const startingCash = 2300000;
+  const cash =
+    startingCash +
+    transactions.reduce((total, transaction) => {
+      if (transaction.type === "Income") {
+        return total + transaction.amount;
+      } else {
+        return total - transaction.amount;
+      }
+    }, 0);
+
+  const deleteTransaction = (index: number) => {
+    setTransactions(
+      transactions.filter((_, i) => i !== index)
+    );
+  const transaction = transactions[index];
+  if (transaction.type === "Income") {
+    // setCash(cash - transaction.amount);
+  } else {
+    // setCash(cash + transaction.amount);
+  }
+
+  setTransactions(
+    transactions.filter((_, i) => i !== index)
+  ); 
+  };
+  const investments = 5200000;
+  const netWorth = cash + investments;
+
+  if (!mounted) return null;
 
   return (
     <main className="flex min-h-screen bg-neutral-950">
@@ -33,7 +86,7 @@ export default function Home() {
 
             <StatCard
             title="Net Worth"
-            value={dashboardData.netWorth.value}
+            value={`Rp${netWorth.toLocaleString("id-ID")}`}
             change={dashboardData.netWorth.change}
             icon={Wallet}
             />
@@ -47,13 +100,14 @@ export default function Home() {
 
             <StatCard
             title="Investments"
-            value={dashboardData.investments.value}
+            value={`Rp${investments.toLocaleString("id-ID")}`}
             change={dashboardData.investments.change}
             icon={TrendingUp}
             />
 
             <TransactionList
               transactions={transactions}
+              deleteTransaction={deleteTransaction}
             /> 
 
             <button
@@ -65,8 +119,6 @@ export default function Home() {
               <TransactionModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                cash={cash}
-                setCash={setCash}
                 transactions={transactions}
                 setTransactions={setTransactions}
               />
