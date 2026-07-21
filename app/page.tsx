@@ -11,11 +11,12 @@ import {
 import { useState } from "react";
 import TransactionModal from "@/components/dashboard/TransactionModal";
 import TransactionList from "@/components/transactions/TransactionList";
+import {Transaction} from "@/types/transaction";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [cash, setCash] = useState(2300000);
-  const [transactions, setTransactions] = useState<number[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   return (
     <main className="flex min-h-screen bg-neutral-950">

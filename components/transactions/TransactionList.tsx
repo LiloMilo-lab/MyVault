@@ -1,5 +1,6 @@
+import {Transaction} from "@/types/transaction";
 type TransactionListProps = {
-  transactions: number[];
+  transactions: Transaction[];
 };
 
 export default function TransactionList({
@@ -25,7 +26,7 @@ export default function TransactionList({
               key={index}
               className="rounded-lg bg-neutral-800 p-3"
             >
-              + Rp{transaction.toLocaleString("id-ID")}
+              + Rp{transaction.amount.toLocaleString("id-ID")}
             </div>
 
           ))}
