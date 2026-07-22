@@ -22,6 +22,18 @@ export default function TransactionModal({
     setEditingIndex
 }: TransactionModalProps) {
   const [amount, setAmount] = useState("");
+  const categories = [
+    "Food",
+    "Transport",
+    "Shopping",
+    "Salary",
+    "Entertainment",
+    "Investment",
+    "Health",
+    "Education",
+    "General",
+  ];
+
   const [category, setCategory] = useState("General");
   const [type, setType] = useState<"Income" | "Expense">("Income");
   const [date, setDate] = useState("");
@@ -52,11 +64,16 @@ export default function TransactionModal({
       <div className="w-full max-w-md rounded-2xl border border-neutral-700 bg-neutral-900 p-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">
-            Add Transaction
+            {editingIndex !== null
+              ? "Edit Transaction"
+              : "Add Transaction"}
           </h2>
 
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setEditingIndex(null);
+              setIsOpen(false);
+            }}
             className="text-neutral-400 transition hover:text-white"
           >
             ✕
@@ -78,22 +95,21 @@ export default function TransactionModal({
         </div>
 
         <div className="mt-4">
-            <label className="mb-2 block text-sm text-neutral-400">
-                Category
-            </label>
+          <label className="mb-2 block text-sm text-neutral-400">
+            Category
+          </label>
 
-            <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
-            >
-                <option>General</option>
-                <option>Salary</option>
-                <option>Food</option>
-                <option>Transport</option>
-                <option>Shopping</option>
-                <option>Investment</option>
-            </select>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+          >
+            {categories.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="mt-4">
@@ -113,9 +129,25 @@ export default function TransactionModal({
             </select>
         </div>
 
+        <div className="mt-4">
+          <label className="mb-2 block text-sm text-neutral-400">
+            Date
+          </label>
+
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+          />
+        </div>
+
         <div className="mt-8 flex justify-end gap-3">
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setEditingIndex(null);
+              setIsOpen(false);
+            }}
             className="rounded-xl border border-neutral-700 px-5 py-2"
           >
             Cancel

@@ -23,12 +23,21 @@ export default function Home() {
 
     return saved ? JSON.parse(saved) : [];
   });
+  const [search, setSearch] = useState("");
   useEffect(() => {
     localStorage.setItem(
       "transactions", 
       JSON.stringify(transactions)
     );
   }, [transactions]);
+
+  const [filter, setFilter] = useState<
+    "All" | "Income" | "Expense"
+  >("All");
+
+  const [sortBy, setSortBy] = useState<
+    "Newest" | "Oldest" | "Highest" | "Lowest"
+  >("Newest");
 
   useEffect(() => {
     setMounted(true);
@@ -68,7 +77,51 @@ export default function Home() {
   };
   const investments = 5200000;
   const netWorth = cash + investments;
+  const filteredTransactions =
+    transactions.filter((transaction) => {
+
+      const matchSearch =
+        transaction.category
+          .toLowerCase()
+          .includes(search.toLowerCase());
+
+      const matchFilter =
+        filter === "All" ||
+        transaction.type === filter;
+
+      return matchSearch && matchFilter;
+
+    });
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+    const sortedTransactions = [...filteredTransactions];
+    sortedTransactions.sort((a, b) => {
+
+      switch (sortBy) {
+
+        case "Newest":
+          return (
+            new Date(b.date).getTime() -
+            new Date(a.date).getTime()
+          );
+
+        case "Oldest":
+          return (
+            new Date(a.date).getTime() -
+            new Date(b.date).getTime()
+          );
+
+        case "Highest":
+          return b.amount - a.amount;
+
+        case "Lowest":
+          return a.amount - b.amount;
+
+        default:
+          return 0;
+      }
+
+    });
 
   if (!mounted) return null;
 
@@ -107,10 +160,16 @@ export default function Home() {
             />
 
             <TransactionList
-              transactions={transactions}
+              transactions={sortedTransactions}
               deleteTransaction={deleteTransaction}
               setEditingIndex={setEditingIndex}
               setIsOpen={setIsOpen}
+              search={search}
+              setSearch={setSearch}
+              filter={filter}
+              setFilter={setFilter}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
             /> 
 
             <button
