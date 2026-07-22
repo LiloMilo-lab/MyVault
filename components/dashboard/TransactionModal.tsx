@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
 
 type TransactionModalProps = {
@@ -9,6 +9,8 @@ type TransactionModalProps = {
 
   transactions: Transaction[];
   setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  editingIndex: number | null;
+  setEditingIndex: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 export default function TransactionModal({
@@ -16,10 +18,32 @@ export default function TransactionModal({
     setIsOpen,
     transactions,
     setTransactions,
+    editingIndex,
+    setEditingIndex
 }: TransactionModalProps) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("General");
   const [type, setType] = useState<"Income" | "Expense">("Income");
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (editingIndex !== null) {
+      const transaction = transactions[editingIndex];
+      if (!transaction) return;
+
+      setAmount(transaction.amount.toString());
+      setCategory(transaction.category);
+      setType(transaction.type);
+      setDate(transaction.date);
+    } else {
+      setAmount("");
+      setCategory("General");
+      setType("Income");
+      setDate(new Date().toISOString().split("T")[0]);
+    }
+  }, [isOpen, editingIndex, transactions]);
 
   if (!isOpen) return null;
 
@@ -99,23 +123,43 @@ export default function TransactionModal({
 
           <button
                 onClick={() => {
-                    if (!amount) return;
-                    setTransactions([
-                    ...transactions,
-                    {
-                        amount: Number(amount),
-                        category,
-                        type,
-                        date: new Date().toISOString(),
-                    },
-                    ]);
+                if (!amount) return;
 
-                    setAmount("");
-                    setIsOpen(false);
-                }}
-                className="rounded-xl bg-emerald-500 px-5 py-2 font-semibold text-black"
-                >
-                Save
+                const newTransaction = {
+                  amount: Number(amount),
+                  category,
+                  type,
+                  date,
+                };
+
+                if (editingIndex !== null) {
+
+                  const updatedTransactions = [...transactions];
+
+                  updatedTransactions[editingIndex] = newTransaction;
+
+                  setTransactions(updatedTransactions);
+
+                } else {
+
+                  setTransactions([
+                    ...transactions,
+                    newTransaction,
+                  ]);
+
+                }
+
+                setAmount("");
+                setCategory("General");
+                setType("Income");
+                setDate(new Date().toISOString().split("T")[0]);
+
+                setEditingIndex(null);
+                setIsOpen(false);
+              }}
+            className="rounded-xl bg-emerald-500 px-5 py-2 font-semibold text-black transition hover:bg-emerald-400"
+          >
+            {editingIndex !== null ? "Update" : "Add"}
           </button>
         </div>
       </div>

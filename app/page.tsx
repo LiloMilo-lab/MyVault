@@ -68,6 +68,7 @@ export default function Home() {
   };
   const investments = 5200000;
   const netWorth = cash + investments;
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   if (!mounted) return null;
 
@@ -108,6 +109,8 @@ export default function Home() {
             <TransactionList
               transactions={transactions}
               deleteTransaction={deleteTransaction}
+              setEditingIndex={setEditingIndex}
+              setIsOpen={setIsOpen}
             /> 
 
             <button
@@ -121,6 +124,8 @@ export default function Home() {
                 setIsOpen={setIsOpen}
                 transactions={transactions}
                 setTransactions={setTransactions}
+                editingIndex={editingIndex}
+                setEditingIndex={setEditingIndex}  
               />
           </div>
 
