@@ -11,8 +11,19 @@ export default function FinanceChart({
   const max = Math.max(income, expense, 1);
 
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-
+    <div 
+        className="
+            rounded-2xl 
+            border 
+            border-neutral-800 
+            bg-neutral-900 
+            p-6
+            transition-all
+            duration-300
+            hover:border-neutral-700
+            hover:-translate-y-1
+        "
+    >
       <h2 className="mb-6 text-xl font-bold">
         Finance Overview
       </h2>
@@ -34,15 +45,21 @@ export default function FinanceChart({
         <div className="h-4 rounded-full bg-neutral-800">
 
           <div
-            className="h-4 rounded-full bg-green-500 transition-all"
-            style={{
+            className="
+                h-4 
+                rounded-full 
+                bg-green-500 
+                transition-all
+                duration-700
+                "
+                style={{
               width: `${(income / max) * 100}%`,
             }}
-          />
+                />
+
+            </div>
 
         </div>
-
-      </div>
 
       {/* Expense */}
 
@@ -61,7 +78,12 @@ export default function FinanceChart({
         <div className="h-4 rounded-full bg-neutral-800">
 
           <div
-            className="h-4 rounded-full bg-red-500 transition-all"
+            className="
+                h-4 
+                rounded-full 
+                bg-red-500 
+                transition-all
+                duration-700"
             style={{
               width: `${(expense / max) * 100}%`,
             }}

@@ -15,6 +15,8 @@ import FinanceChart from "@/components/dashboard/FinanceChart";
 import {useTransactions} from "@/hooks/useTransactions";
 import { formatCurrency } from "@/lib/format";
 import {useStatistics} from "@/hooks/useStatistics";
+import CategoryBreakdown from "@/components/dashboard/CategoryBreakdown";
+import MonthlySummary from "@/components/dashboard/MonthlySummary";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +33,8 @@ export default function Home() {
     totalTransactions,
     incomeCount,
     expenseCount,
+    highestIncome,
+    highestExpense,
   } = useStatistics(transactions);
 
   const [search, setSearch] = useState("");
@@ -143,12 +147,25 @@ export default function Home() {
               icon={Wallet}
             />
 
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 md:col-span-4">
+            <div
+              className="
+                rounded-2xl
+                border
+                border-neutral-800
+                bg-neutral-900
+                p-6
+                md:col-span-4
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:border-neutral-700
+              "
+            >             
               <h2 className="text-xl font-bold">
                 Overview
               </h2>
 
-              <div className="mt-5 grid grid-cols-4 gap-6">
+              <div className="mt-5 grid grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm text-neutral-500">
                     Transactions
@@ -177,27 +194,59 @@ export default function Home() {
                   <p className="text-2xl font-bold text-red-400">
                     {expenseCount}
                   </p>
+
+                  <div>
+                    <p className="text-sm text-neutral-500">
+                      Highest Income
+                    </p>
+
+                    <p className="text-xl font-bold text-green-400">
+                      {formatCurrency(highestIncome)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-neutral-500">
+                      Highest Expense
+                    </p>
+
+                    <p className="text-xl font-bold text-red-400">
+                      {formatCurrency(highestExpense)}
+                    </p>
+                  </div>
+
                 </div>
               </div>
             </div>
 
-            <FinanceChart
-              income={totalIncome}
-              expense={totalExpense}
-            />
+            <div className="grid gap-6 lg:grid-cols-2 md:col-span-4">              
+              <FinanceChart
+                income={totalIncome}
+                expense={totalExpense}
+              />
 
-            <TransactionList
-              transactions={sortedTransactions}
-              deleteTransaction={deleteTransaction}
-              setEditingIndex={setEditingIndex}
-              setIsOpen={setIsOpen}
-              search={search}
-              setSearch={setSearch}
-              filter={filter}
-              setFilter={setFilter}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-            /> 
+              <MonthlySummary
+                income={totalIncome}
+                expense={totalExpense}
+              />
+
+              <CategoryBreakdown
+                transactions={transactions}
+              />
+
+              <TransactionList
+                transactions={sortedTransactions}
+                deleteTransaction={deleteTransaction}
+                setEditingIndex={setEditingIndex}
+                setIsOpen={setIsOpen}
+                search={search}
+                setSearch={setSearch}
+                filter={filter}
+                setFilter={setFilter}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+              />
+            </div>
 
             <button
               onClick={() => setIsOpen(true)}
@@ -212,7 +261,7 @@ export default function Home() {
                 setTransactions={setTransactions}
                 editingIndex={editingIndex}
                 setEditingIndex={setEditingIndex}  
-              />
+            />
           </div>
 
         </section>

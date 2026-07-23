@@ -17,8 +17,11 @@ export function useStatistics(
 
   const cash =
     startingCash +
-    totalIncome -
-    totalExpense;
+    transactions.reduce((total,transaction) => {
+        return transaction.type === "Income"
+            ? total + transaction.amount
+            : total - transaction.amount;
+    }, 0);
 
   const totalTransactions =
     transactions.length;
@@ -33,6 +36,22 @@ export function useStatistics(
       (t) => t.type === "Expense"
     ).length;
 
+    const highestIncome =
+    transactions
+        .filter(t => t.type === "Income")
+        .reduce(
+        (max, t) => Math.max(max, t.amount),
+        0
+        );
+
+    const highestExpense =
+    transactions
+        .filter(t => t.type === "Expense")
+        .reduce(
+        (max, t) => Math.max(max, t.amount),
+        0
+        );
+
   return {
     cash,
     totalIncome,
@@ -40,5 +59,7 @@ export function useStatistics(
     totalTransactions,
     incomeCount,
     expenseCount,
+    highestIncome,
+    highestExpense
   };
 }

@@ -56,34 +56,47 @@ export default function TransactionList({
   setSortBy
 }: TransactionListProps) {
   return (
-    <div className="mt-8 rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
-
+    <div
+      className="
+        h-full
+        rounded-2xl
+        border
+        border-neutral-800
+        bg-neutral-900
+        p-6
+        transition-all
+        duration-300
+        hover:border-neutral-700
+        hover:-translate-y-1
+      "
+    >
       <h2 className="mb-4 text-xl font-bold">
         Recent Transactions
       </h2>
 
-      <div className="mb-4">
         <input
           type="text"
           placeholder="Search transactions..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="
+          mb-5
           w-full
           rounded-xl
           border
           border-neutral-700
           bg-neutral-800
-          p-3
+          px-4
+          py-3
           text-white
           placeholder:text-neutral-500
           focus:outline-none
           focus:ring-2
           focus:ring-emerald-500
-          "        />
-      </div>
+          "       
+        />
 
-      <div className="mb-5 flex gap-3">
+      <div className="mb-5 flex flex-wrap gap-2">
 
         <button
           onClick={() => setFilter("All")}
@@ -163,11 +176,10 @@ export default function TransactionList({
 
         <div className="space-y-3">
 
-          {transactions.map((transaction, index) => (
-
+          {transactions.slice(0, 5).map((transaction, index) => (
             <div
               key={index}
-              className={`flex items-center justify-between rounded-xl border p-4 transition hover:scale-[1.01] ${
+              className={`flex items-start justify-between gap-4 rounded-xl border p-4 transition hover:scale-[1.01] ${
                 transaction.type === "Income"
                   ? "border-emerald-700 bg-neutral-800"
                   : "border-red-700 bg-neutral-800"
@@ -192,7 +204,7 @@ export default function TransactionList({
                     {transaction.type}
                   </p>
 
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-[11px] text-neutral-500">
                     {new Date(transaction.date).toLocaleDateString(
                       "id-ID",
                       {
@@ -208,11 +220,11 @@ export default function TransactionList({
                 <div className="text-right">
 
                   <p
-                    className={
+                    className={`font-bold whitespace-nowrap ${
                       transaction.type === "Income"
                         ? "font-bold text-green-400"
                         : "font-bold text-red-400"
-                    }
+                    }`}
                   >
                     {transaction.type === "Income" ? "+" : "-"}
                     {formatCurrency(transaction.amount)}
@@ -250,6 +262,18 @@ export default function TransactionList({
         </div>
       )}
 
+      <div className="mt-6 text-center">
+
+        <button
+          className="text-sm font-semibold text-emerald-400 transition hover:text-emerald-300"
+        >
+          View All Transactions →
+        </button>
+
+      </div>
+
     </div>
+
+    
   );
 }
