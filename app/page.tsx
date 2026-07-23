@@ -8,28 +8,32 @@ import {
   Landmark,
   TrendingUp,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TransactionModal from "@/components/dashboard/TransactionModal";
 import TransactionList from "@/components/transactions/TransactionList";
-import {Transaction} from "@/types/transaction";
+import FinanceChart from "@/components/dashboard/FinanceChart";
+import {useTransactions} from "@/hooks/useTransactions";
+import { formatCurrency } from "@/lib/format";
+import {useStatistics} from "@/hooks/useStatistics";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [transactions, setTransactions] = useState<Transaction[]>(() => {
-    if (typeof window === "undefined") return [];
+  const {
+    transactions,
+    setTransactions,
+    mounted,
+  } = useTransactions();
 
-    const saved = localStorage.getItem("transactions");
+  const {
+    cash,
+    totalIncome,
+    totalExpense,
+    totalTransactions,
+    incomeCount,
+    expenseCount,
+  } = useStatistics(transactions);
 
-    return saved ? JSON.parse(saved) : [];
-  });
   const [search, setSearch] = useState("");
-  useEffect(() => {
-    localStorage.setItem(
-      "transactions", 
-      JSON.stringify(transactions)
-    );
-  }, [transactions]);
 
   const [filter, setFilter] = useState<
     "All" | "Income" | "Expense"
@@ -39,44 +43,24 @@ export default function Home() {
     "Newest" | "Oldest" | "Highest" | "Lowest"
   >("Newest");
 
-  useEffect(() => {
-    setMounted(true);
+    const saving =
+      totalIncome - totalExpense;
 
-    const saved = localStorage.getItem("transactions");
-
-    if (saved) {
-      setTransactions(JSON.parse(saved));
-    }
-  }, []);
-
-  const startingCash = 2300000;
-  const cash =
-    startingCash +
-    transactions.reduce((total, transaction) => {
-      if (transaction.type === "Income") {
-        return total + transaction.amount;
-      } else {
-        return total - transaction.amount;
-      }
-    }, 0);
-
+    const savingRate =
+      totalIncome === 0
+        ? 0
+        : (saving / totalIncome) * 100;
+  
   const deleteTransaction = (index: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this transaction?"
+    );
+
+    if (!confirmDelete) return;
     setTransactions(
       transactions.filter((_, i) => i !== index)
-    );
-  const transaction = transactions[index];
-  if (transaction.type === "Income") {
-    // setCash(cash - transaction.amount);
-  } else {
-    // setCash(cash + transaction.amount);
-  }
-
-  setTransactions(
-    transactions.filter((_, i) => i !== index)
-  ); 
+    ); 
   };
-  const investments = 5200000;
-  const netWorth = cash + investments;
   const filteredTransactions =
     transactions.filter((transaction) => {
 
@@ -136,27 +120,70 @@ export default function Home() {
 
         <section className="flex-1 p-8">
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-4">
 
             <StatCard
-            title="Net Worth"
-            value={`Rp${netWorth.toLocaleString("id-ID")}`}
-            change={dashboardData.netWorth.change}
-            icon={Wallet}
+              title="Cash"
+              value={formatCurrency(cash)}
+              change={dashboardData.cash.change}
+              icon={Landmark}
             />
 
             <StatCard
-            title="Cash"
-            value={`Rp${cash.toLocaleString("id-ID")}`}
-            change={dashboardData.cash.change}
-            icon={Landmark}
+              title="Income"
+              value={formatCurrency(totalIncome)}
+              change="+"
+              icon={TrendingUp}
             />
 
             <StatCard
-            title="Investments"
-            value={`Rp${investments.toLocaleString("id-ID")}`}
-            change={dashboardData.investments.change}
-            icon={TrendingUp}
+              title="Expense"
+              value={formatCurrency(totalExpense)}
+              change="-"
+              icon={Wallet}
+            />
+
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 md:col-span-4">
+              <h2 className="text-xl font-bold">
+                Overview
+              </h2>
+
+              <div className="mt-5 grid grid-cols-4 gap-6">
+                <div>
+                  <p className="text-sm text-neutral-500">
+                    Transactions
+                  </p>
+
+                  <p className="text-2xl font-bold">
+                    {totalTransactions}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-neutral-500">
+                    Income
+                  </p>
+
+                  <p className="text-2xl font-bold text-green-400">
+                    {incomeCount}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-neutral-500">
+                    Expense
+                  </p>
+
+                  <p className="text-2xl font-bold text-red-400">
+                    {expenseCount}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <FinanceChart
+              income={totalIncome}
+              expense={totalExpense}
             />
 
             <TransactionList

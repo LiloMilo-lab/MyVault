@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/lib/format";
 import {Transaction} from "@/types/transaction";
 
 const categoryIcons = {
@@ -7,6 +8,9 @@ const categoryIcons = {
     Shopping: "🛒",
     Entertainment: "🎮",
     General: "📦",
+    Investment: "📈",
+    Health: "🏥",
+    Education: "📚",
 };
 
 type TransactionListProps = {
@@ -64,8 +68,19 @@ export default function TransactionList({
           placeholder="Search transactions..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-neutral-800 text-neutral-500 placeholder:text-neutral-600 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+          className="
+          w-full
+          rounded-xl
+          border
+          border-neutral-700
+          bg-neutral-800
+          p-3
+          text-white
+          placeholder:text-neutral-500
+          focus:outline-none
+          focus:ring-2
+          focus:ring-emerald-500
+          "        />
       </div>
 
       <div className="mb-5 flex gap-3">
@@ -127,10 +142,25 @@ export default function TransactionList({
       </div>
 
       {transactions.length === 0 ? (
-        <p className="text-neutral-500">
-          No transactions yet.
+
+      <div className="py-16 text-center">
+
+        <div className="text-6xl">
+          📄
+        </div>
+
+        <h3 className="mt-4 text-xl font-semibold">
+          No Matching Transactions
+        </h3>
+
+        <p className="mt-2 text-neutral-500">
+          Try changing your search or filter
         </p>
+
+      </div>
+
       ) : (
+
         <div className="space-y-3">
 
           {transactions.map((transaction, index) => (
@@ -184,8 +214,8 @@ export default function TransactionList({
                         : "font-bold text-red-400"
                     }
                   >
-                    {transaction.type === "Income" ? "+" : "-"}Rp
-                    {transaction.amount.toLocaleString("id-ID")}
+                    {transaction.type === "Income" ? "+" : "-"}
+                    {formatCurrency(transaction.amount)}
                   </p>
 
                   <div className="mt-2 flex justify-end gap-3">

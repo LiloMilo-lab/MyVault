@@ -9,6 +9,7 @@ type TransactionModalProps = {
 
   transactions: Transaction[];
   setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  
   editingIndex: number | null;
   setEditingIndex: React.Dispatch<React.SetStateAction<number | null>>;
 };
@@ -57,16 +58,43 @@ export default function TransactionModal({
     }
   }, [isOpen, editingIndex, transactions]);
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        setEditingIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener(
+        "keydown",
+        handleEscape
+      );
+    };
+  }, [setIsOpen, setEditingIndex]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-md rounded-2xl border border-neutral-700 bg-neutral-900 p-6">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/60"
+      onClick={() => {
+        setIsOpen(false);
+        setEditingIndex(null);
+      }}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl border border-neutral-700 bg-neutral-900 p-6"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">
             {editingIndex !== null
-              ? "Edit Transaction"
-              : "Add Transaction"}
+              ? "✏️ Edit Transaction"
+              : "➕ Add Transaction"}
           </h2>
 
           <button
