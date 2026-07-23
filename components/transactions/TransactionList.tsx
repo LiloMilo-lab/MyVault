@@ -1,5 +1,6 @@
 import { formatCurrency } from "@/lib/format";
 import {Transaction} from "@/types/transaction";
+import { ReceiptText } from "lucide-react";
 
 const categoryIcons = {
     Food: "🍔" ,
@@ -70,9 +71,13 @@ export default function TransactionList({
         hover:-translate-y-1
       "
     >
-      <h2 className="mb-4 text-xl font-bold">
-        Recent Transactions
-      </h2>
+      <div className="mb-6 flex items-center gap-2">
+        <ReceiptText className="h-5 w-5 text-purple-400" />
+
+        <h2 className="text-xl font-bold">
+          Recent Transactions
+        </h2>
+      </div>
 
         <input
           type="text"
@@ -90,9 +95,12 @@ export default function TransactionList({
           py-3
           text-white
           placeholder:text-neutral-500
+          transition-all
+          duration-300
           focus:outline-none
           focus:ring-2
           focus:ring-emerald-500
+          focus:border-emerald-500
           "       
         />
 
@@ -100,10 +108,17 @@ export default function TransactionList({
 
         <button
           onClick={() => setFilter("All")}
-          className={`rounded-xl px-4 py-2 ${
+          className={`
+            rounded-xl 
+            px-4 
+            py-2 
+            transition-all
+            duration-300
+            hover:scale-105
+            ${
             filter === "All"
               ? "bg-emerald-500 text-black"
-              : "bg-neutral-800"
+              : "bg-neutral-800 hover:bg-neutral-700"
           }`}
         >
           All
@@ -111,7 +126,14 @@ export default function TransactionList({
 
         <button
           onClick={() => setFilter("Income")}
-          className={`rounded-xl px-4 py-2 ${
+          className={`
+            rounded-xl 
+            px-4 
+            py-2 
+            transition-all
+            duration-300
+            hover:scale-105
+            ${
             filter === "Income"
               ? "bg-emerald-500 text-black"
               : "bg-neutral-800"
@@ -122,7 +144,14 @@ export default function TransactionList({
 
         <button
           onClick={() => setFilter("Expense")}
-          className={`rounded-xl px-4 py-2 ${
+          className={`
+            rounded-xl 
+            px-4 
+            py-2 
+            transition-all
+            duration-300
+            hover:scale-105
+            ${
             filter === "Expense"
               ? "bg-emerald-500 text-black"
               : "bg-neutral-800"
@@ -145,7 +174,19 @@ export default function TransactionList({
                 | "Lowest"
             )
           }
-          className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+          className="
+          w-full 
+          rounded-xl 
+          border 
+          border-neutral-700 
+          bg-neutral-800 
+          p-3
+          transition-all
+          duration-300
+          focus:ring-2
+          focus:ring-emerald-500
+          focus:border-emerald-500
+          "
         >
           <option>Newest</option>
           <option>Oldest</option>
@@ -179,7 +220,7 @@ export default function TransactionList({
           {transactions.slice(0, 5).map((transaction, index) => (
             <div
               key={index}
-              className={`flex items-start justify-between gap-4 rounded-xl border p-4 transition hover:scale-[1.01] ${
+              className={`flex items-start justify-between gap-4 rounded-xl border p-4 transition-all duration-300 transition hover:scale-[1.01] ${
                 transaction.type === "Income"
                   ? "border-emerald-700 bg-neutral-800"
                   : "border-red-700 bg-neutral-800"
@@ -237,14 +278,14 @@ export default function TransactionList({
                         setEditingIndex(index);
                         setIsOpen(true);
                       }}
-                      className="text-blue-400 transition hover:text-blue-300"
+                      className="text-blue-400 transition-all duration-300 hover:scale-125 hover:text-blue-300"
                     >
                       ✏️
                     </button>
 
                     <button
                       onClick={() => deleteTransaction(index)}
-                      className="text-red-400 transition hover:text-red-300"
+                      className="text-red-400 transition-all duration-300 hover:scale-125 hover:text-red-300"
                     >
                       🗑️
                     </button>
@@ -265,7 +306,7 @@ export default function TransactionList({
       <div className="mt-6 text-center">
 
         <button
-          className="text-sm font-semibold text-emerald-400 transition hover:text-emerald-300"
+          className="text-sm font-semibold text-emerald-400 transition-all duration-300 hover:text-emerald-300 hover:translate-x-1"
         >
           View All Transactions →
         </button>

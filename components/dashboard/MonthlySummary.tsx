@@ -1,3 +1,4 @@
+import { CalendarDays } from "lucide-react";
 type MonthlySummaryProps = {
   income: number;
   expense: number;
@@ -31,9 +32,13 @@ export default function MonthlySummary({
                 hover:-translate-y-1
             "
         >
-            <h2 className="mb-6 text-xl font-bold">
-                Monthly Summary
-            </h2>
+            <div className="mb-6 flex items-center gap-2">
+                <CalendarDays className="h-5 w-5 text-blue-400" />
+
+                <h2 className="text-xl font-bold">
+                    Monthly Summary
+                </h2>
+            </div>
 
             <div className="space-y-4">
 

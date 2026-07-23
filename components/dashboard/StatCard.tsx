@@ -22,7 +22,9 @@ export default function StatCard({
         transition-all
         duration-300
         hover:-translate-y-1
-        hover:shadow-emerald-500/40
+        hover:border-neutral-700
+        hover:shadow-lg
+        hover:shadow-emerald-500/10
         ">
 
         <div className="flex items-center justify-between">

@@ -1,4 +1,5 @@
 import { Transaction } from "@/types/transaction";
+import { PieChart } from "lucide-react";
 type CategoryBreakdownProps = {
   transactions: Transaction[];
 };
@@ -35,9 +36,13 @@ export default function CategoryBreakdown({
                 hover:-translate-y-1
             "
         >
-            <h2 className="mb-6 text-xl font-bold">
-                Category Breakdown
-            </h2>
+            <div className="mb-6 flex items-center gap-2">
+                <PieChart className="h-5 w-5 text-yellow-400" />
+
+                <h2 className="text-xl font-bold">
+                    Category Breakdown
+                </h2>
+            </div>
 
             <div className="py-16 text-center">
 
@@ -79,9 +84,13 @@ export default function CategoryBreakdown({
                 hover:-translate-y-1
             "
         >    
-            <h2 className="mb-6 text-xl font-bold">
+        <div className="mb-6 flex items-center gap-2">
+            <PieChart className="h-5 w-5 text-yellow-400" />
+
+            <h2 className="text-xl font-bold">
                 Category Breakdown
             </h2>
+        </div>
 
             <div className="space-y-5">
 
@@ -104,7 +113,8 @@ export default function CategoryBreakdown({
                                     rounded-full 
                                     bg-emerald-500 
                                     transition-all
-                                    duration-700
+                                    duration-500
+                                    hover:brightness-110
                                     "
                                 style={{
                                     width: `${(amount / max) * 100}%`,

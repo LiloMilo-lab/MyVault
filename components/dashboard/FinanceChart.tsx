@@ -1,3 +1,4 @@
+import { BarChart3 } from "lucide-react";
 type FinanceChartProps = {
   income: number;
   expense: number;
@@ -24,75 +25,82 @@ export default function FinanceChart({
             hover:-translate-y-1
         "
     >
-      <h2 className="mb-6 text-xl font-bold">
-        Finance Overview
-      </h2>
+        <div className="mb-6 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-emerald-400" />
 
-      {/* Income */}
-
-      <div className="mb-6">
-
-        <div className="mb-2 flex justify-between">
-
-          <span>Income</span>
-
-          <span>
-            Rp{income.toLocaleString("id-ID")}
-          </span>
-
+            <h2 className="text-xl font-bold">
+                Finance Overview
+            </h2>
         </div>
 
-        <div className="h-4 rounded-full bg-neutral-800">
+        {/* Income */}
 
-          <div
-            className="
-                h-4 
-                rounded-full 
-                bg-green-500 
-                transition-all
-                duration-700
-                "
-                style={{
-              width: `${(income / max) * 100}%`,
-            }}
-                />
+        <div className="mb-6">
+
+            <div className="mb-2 flex justify-between">
+
+                <span>Income</span>
+
+                <span>
+                    Rp{income.toLocaleString("id-ID")}
+                </span>
 
             </div>
 
-        </div>
+            <div className="h-4 rounded-full bg-neutral-800">
 
-      {/* Expense */}
+                <div
+                    className="
+                        h-4 
+                        rounded-full 
+                        bg-green-500 
+                        transition-all
+                        duration-700
+                        hover:brightness-110
+                        "
+                        style={{
+                    width: `${(income / max) * 100}%`,
+                }}
+                    />
+                </div>
 
-      <div>
+            </div>
 
-        <div className="mb-2 flex justify-between">
+            {/* Expense */}
 
-          <span>Expense</span>
+            <div>
 
-          <span>
-            Rp{expense.toLocaleString("id-ID")}
-          </span>
+                <div className="mb-2 flex justify-between">
 
-        </div>
+                    <span>Expense</span>
 
-        <div className="h-4 rounded-full bg-neutral-800">
+                    <span>
+                        Rp{expense.toLocaleString("id-ID")}
+                    </span>
 
-          <div
-            className="
-                h-4 
-                rounded-full 
-                bg-red-500 
-                transition-all
-                duration-700"
-            style={{
-              width: `${(expense / max) * 100}%`,
-            }}
-          />
+                </div>
 
-        </div>
+                <div className="h-4 rounded-full bg-neutral-800">
 
-      </div>
+                    <div
+                        className="
+                            h-4 
+                            rounded-full 
+                            bg-red-500 
+                            transition-all
+                            duration-700
+                            hover:brightness-110
+                            "
+                        style={{
+                        width: `${(expense / max) * 100}%`,
+                    }}
+                        />
 
-    </div>
+                    </div>
+
+                </div>
+
+            </div>
+        
   );
 }

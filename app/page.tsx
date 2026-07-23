@@ -250,7 +250,20 @@ export default function Home() {
 
             <button
               onClick={() => setIsOpen(true)}
-              className="mt-8 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-black transition hover:bg-emerald-400"
+              className="
+              mt-8 
+              rounded-xl 
+              bg-emerald-500 
+              px-6 
+              py-3 
+              font-semibold 
+              text-black 
+              transition-all 
+              hover:bg-emerald-400
+              hover:scale-105
+              active:scale-95
+              shadow-lg
+              shadow-emerald-500/20"
               >
               + Add Transaction
             </button>
