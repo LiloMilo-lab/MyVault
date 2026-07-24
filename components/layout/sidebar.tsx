@@ -1,4 +1,46 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  Briefcase,
+  ReceiptText,
+  BarChart3,
+  Settings,
+} from "lucide-react";
+
+const menuItems = [
+  {
+    name: "Dashboard",
+    href: "/",
+    icon: LayoutDashboard,
+  },
+  {
+    name: "Portfolio",
+    href: "/assets",
+    icon: Briefcase,
+  },
+  {
+    name: "Transactions",
+    href: "/transactions",
+    icon: ReceiptText,
+  },
+  {
+    name: "Analytics",
+    href: "/analytics",
+    icon: BarChart3,
+  },
+  {
+    name: "Settings",
+    href: "/settings",
+    icon: Settings,
+  },
+];
+
 export default function Sidebar() {
+
+const pathname = usePathname();
+
   return (
     <aside className="w-64 h-screen bg-neutral-900 border-r border-neutral-800 p-6">
 
@@ -12,26 +54,26 @@ export default function Sidebar() {
 
       <nav className="mt-10 space-y-3">
 
-        <button className="w-full text-left rounded-lg px-4 py-3 bg-neutral-800 text-white">
-          Dashboard
-        </button>
+        {menuItems.map((item) => {
+          const Icon = item.icon;
 
-        <button className="w-full text-left rounded-lg px-4 py-3 hover:bg-neutral-800 text-neutral-300">
-          Portfolio
-        </button>
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-all duration-300 ${
+                pathname === item.href
+                  ? "bg-emerald-500 text-black"
+                  : "text-neutral-300 hover:bg-neutral-800"
+              }`}
+            >
+              <Icon size={20} />
 
-        <button className="w-full text-left rounded-lg px-4 py-3 hover:bg-neutral-800 text-neutral-300">
-          Transactions
-        </button>
-
-        <button className="w-full text-left rounded-lg px-4 py-3 hover:bg-neutral-800 text-neutral-300">
-          Analytics
-        </button>
-
-        <button className="w-full text-left rounded-lg px-4 py-3 hover:bg-neutral-800 text-neutral-300">
-          Settings
-        </button>
-
+              <span>{item.name}</span>
+            </Link>
+          );
+        })}
+        
       </nav>
 
     </aside>
