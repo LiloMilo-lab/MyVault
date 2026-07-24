@@ -5,9 +5,15 @@ import AssetCard from "@/components/portfolio/AssetCard";
 import AssetList from "@/components/portfolio/AssetList";
 import AssetAllocation from "@/components/portfolio/AssetAllocation";
 import { useAssets } from "@/hooks/useAssets";
+import { useState } from "react";
+import AssetModal from "@/components/portfolio/AssetModal";
 
 export default function AssetsPage() {
-  const { assets } = useAssets();
+  const {
+    assets,
+    setAssets,
+  } = useAssets();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <main className="flex min-h-screen bg-neutral-950">
@@ -58,7 +64,20 @@ export default function AssetsPage() {
 
                 </div>
 
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className="mt-8 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-black transition hover:bg-emerald-400"
+                >
+                  + Add Asset
+                </button>
+
             </div>
+
+            <AssetModal
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              setAssets={setAssets}
+            />
 
         </section>
 
