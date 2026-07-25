@@ -100,11 +100,15 @@ export default function AssetModal({
                 ...prev,
 
                 {
+                    id:
+                    editingIndex !== null
+                        ? assets[editingIndex].id
+                        : Date.now(),
+
                     name,
                     type,
                     value: Number(value),
-                },
-
+                }
             ]);
 
         }

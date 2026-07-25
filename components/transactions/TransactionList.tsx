@@ -275,7 +275,7 @@ export default function TransactionList({
 
                     <button
                       onClick={() => {
-                        setEditingIndex(index);
+                        setEditingId(transaction.id);
                         setIsOpen(true);
                       }}
                       className="text-blue-400 transition-all duration-300 hover:scale-125 hover:text-blue-300"
@@ -284,7 +284,7 @@ export default function TransactionList({
                     </button>
 
                     <button
-                      onClick={() => deleteTransaction(index)}
+                      onClick={() => deleteTransaction(transaction.id)}
                       className="text-red-400 transition-all duration-300 hover:scale-125 hover:text-red-300"
                     >
                       🗑️

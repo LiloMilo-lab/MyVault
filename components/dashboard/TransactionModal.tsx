@@ -19,8 +19,8 @@ export default function TransactionModal({
     setIsOpen,
     transactions,
     setTransactions,
-    editingIndex,
-    setEditingIndex
+    editingId,
+    setEditingId,
 }: TransactionModalProps) {
   const [amount, setAmount] = useState("");
   const categories = [
@@ -43,8 +43,9 @@ export default function TransactionModal({
     if (!isOpen) return;
 
     if (editingIndex !== null) {
-      const transaction = transactions[editingIndex];
-      if (!transaction) return;
+      const transaction = transactions.find(
+        (t) => t.id === editingId
+      );      if (!transaction) return;
 
       setAmount(transaction.amount.toString());
       setCategory(transaction.category);
@@ -62,7 +63,7 @@ export default function TransactionModal({
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
-        setEditingIndex(null);
+        setEditingId(null);
       }
     };
 
@@ -83,7 +84,7 @@ export default function TransactionModal({
       className="fixed inset-0 flex items-center justify-center bg-black/60"
       onClick={() => {
         setIsOpen(false);
-        setEditingIndex(null);
+        setEditingId(null);
       }}
     >
       <div
@@ -99,7 +100,7 @@ export default function TransactionModal({
 
           <button
             onClick={() => {
-              setEditingIndex(null);
+              setEditingId(null);
               setIsOpen(false);
             }}
             className="text-neutral-400 transition hover:text-white"
@@ -173,7 +174,7 @@ export default function TransactionModal({
         <div className="mt-8 flex justify-end gap-3">
           <button
             onClick={() => {
-              setEditingIndex(null);
+              setEditingId(null);
               setIsOpen(false);
             }}
             className="rounded-xl border border-neutral-700 px-5 py-2"
@@ -195,9 +196,9 @@ export default function TransactionModal({
 
                 if (editingIndex !== null) {
 
-                  const updatedTransactions = [...transactions];
-
-                  updatedTransactions[editingIndex] = newTransaction;
+                  const updatedTransactions = transactions.map((t) =>
+                    t.id === editingId ? newTransaction : t
+                  );
 
                   setTransactions(updatedTransactions);
 
@@ -215,7 +216,7 @@ export default function TransactionModal({
                 setType("Income");
                 setDate(new Date().toISOString().split("T")[0]);
 
-                setEditingIndex(null);
+                setEditingId(null);
                 setIsOpen(false);
               }}
             className="rounded-xl bg-emerald-500 px-5 py-2 font-semibold text-black transition hover:bg-emerald-400"

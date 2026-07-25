@@ -55,15 +55,17 @@ export default function Home() {
         ? 0
         : (saving / totalIncome) * 100;
   
-  const deleteTransaction = (index: number) => {
+  const deleteTransaction = (id: number) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this transaction?"
     );
 
     if (!confirmDelete) return;
     setTransactions(
-      transactions.filter((_, i) => i !== index)
-    ); 
+      transactions.filter(
+        (transaction) => transaction.id !== id
+      )
+    );
   };
   const filteredTransactions =
     transactions.filter((transaction) => {
@@ -80,7 +82,7 @@ export default function Home() {
       return matchSearch && matchFilter;
 
     });
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
     const sortedTransactions = [...filteredTransactions];
     sortedTransactions.sort((a, b) => {
@@ -237,7 +239,7 @@ export default function Home() {
               <TransactionList
                 transactions={sortedTransactions}
                 deleteTransaction={deleteTransaction}
-                setEditingIndex={setEditingIndex}
+                setEditingId={setEditingId}
                 setIsOpen={setIsOpen}
                 search={search}
                 setSearch={setSearch}
@@ -272,8 +274,8 @@ export default function Home() {
                 setIsOpen={setIsOpen}
                 transactions={transactions}
                 setTransactions={setTransactions}
-                editingIndex={editingIndex}
-                setEditingIndex={setEditingIndex}  
+                editingId={editingId}
+                setEditingId={setEditingId}  
             />
           </div>
 

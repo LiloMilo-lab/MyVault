@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 export type Asset = {
+  id: number;
   name: string;
   type: string;
   value: number;
@@ -26,6 +27,7 @@ export function useAssets() {
 
         setAssets([
           {
+            id: 1,
             name: "Gold",
             type: "Gold",
             value: 250000,
@@ -38,6 +40,7 @@ export function useAssets() {
 
       setAssets([
         {
+          id:1,
           name: "Gold",
           type: "Gold",
           value: 250000,
