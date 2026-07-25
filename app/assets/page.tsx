@@ -14,6 +14,24 @@ export default function AssetsPage() {
     setAssets,
   } = useAssets();
   const [isOpen, setIsOpen] = useState(false);
+  const [editingIndex, setEditingIndex] =
+    useState<number | null>(null);
+
+  function deleteAsset(index: number) {
+
+    setAssets((prev) =>
+      prev.filter((_, i) => i !== index)
+    );
+
+  }
+
+  function editAsset(index: number) {
+
+    setEditingIndex(index);
+
+    setIsOpen(true);
+
+  }
 
   return (
     <main className="flex min-h-screen bg-neutral-950">
@@ -60,12 +78,20 @@ export default function AssetsPage() {
 
                     <AssetList
                       assets={assets}
+                      deleteAsset={deleteAsset}
+                      editAsset={editAsset}
                     />
 
                 </div>
 
                 <button
-                  onClick={() => setIsOpen(true)}
+                  onClick={() => {
+
+                      setEditingIndex(null);
+
+                      setIsOpen(true);
+
+                  }}                  
                   className="mt-8 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-black transition hover:bg-emerald-400"
                 >
                   + Add Asset
@@ -77,6 +103,9 @@ export default function AssetsPage() {
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               setAssets={setAssets}
+              editingIndex={editingIndex}
+              setEditingIndex={setEditingIndex}
+              assets={assets}
             />
 
         </section>

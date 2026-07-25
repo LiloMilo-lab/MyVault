@@ -219,7 +219,7 @@ export default function TransactionList({
 
           {transactions.slice(0, 5).map((transaction, index) => (
             <div
-              key={index}
+              key={transaction.id}
               className={`flex items-start justify-between gap-4 rounded-xl border p-4 transition-all duration-300 transition hover:scale-[1.01] ${
                 transaction.type === "Income"
                   ? "border-emerald-700 bg-neutral-800"

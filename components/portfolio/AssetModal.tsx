@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Asset } from "@/hooks/useAssets";
 
 type AssetModalProps = {
@@ -8,42 +8,112 @@ type AssetModalProps = {
     React.SetStateAction<boolean>
   >;
 
+  assets: Asset[];
+
   setAssets: React.Dispatch<
     React.SetStateAction<Asset[]>
+  >;
+
+  editingIndex: number | null;
+
+  setEditingIndex: React.Dispatch<
+    React.SetStateAction<number | null>
   >;
 };
 
 export default function AssetModal({
     isOpen,
     setIsOpen,
+    assets,
     setAssets,
-}:  AssetModalProps) {
+    editingIndex,
+    setEditingIndex,
+}: AssetModalProps) {
 
     const [name, setName] = useState("");
     const [type, setType] = useState("Gold");
     const [value, setValue] = useState("");
-    function handleSave() {
+
+    useEffect(() => {
 
         if (
-            !name ||
-            !value
-        ) return;
 
-        setAssets((prev) => [
+            editingIndex !== null &&
+            assets[editingIndex]
 
-            ...prev,
+        ) {
 
-            {
-            name,
-            type,
-            value: Number(value),
-            },
+            setName(assets[editingIndex].name);
 
-        ]);
+            setType(assets[editingIndex].type);
+
+            setValue(
+                assets[editingIndex].value.toString()
+            );
+
+        } else {
+
+            setName("");
+
+            setType("Gold");
+
+            setValue("");
+
+        }
+
+    }, [editingIndex, assets]);
+
+    function handleClose() {
+
+        setEditingIndex(null);
+
+        setIsOpen(false);
+
+    }
+
+    function handleSave() {
+
+        if (!name || !value) return;
+
+        if (editingIndex !== null) {
+
+            setAssets((prev) =>
+
+                prev.map((asset, index) =>
+
+                    index === editingIndex
+                        ? {
+                            name,
+                            type,
+                            value: Number(value),
+                        }
+                        : asset
+
+                )
+
+            );
+
+        } else {
+
+            setAssets((prev) => [
+
+                ...prev,
+
+                {
+                    name,
+                    type,
+                    value: Number(value),
+                },
+
+            ]);
+
+        }
 
         setName("");
         setType("Gold");
         setValue("");
+
+        setEditingIndex(null);
 
         setIsOpen(false);
 
@@ -53,13 +123,20 @@ export default function AssetModal({
 
   return (
     <div
-        onClick={() => setIsOpen(false)}
+        onClick={handleClose}
         className="fixed inset-0 flex items-center justify-center bg-black/60"
     >
         <div 
             onClick={(e) => e.stopPropagation()}
             className="relative w-full max-w-md rounded-2xl bg-neutral-900 p-6"
         >
+            <h2 className="mb-6 text-2xl font-bold">
+
+                {editingIndex !== null
+                    ? "Edit Asset"
+                    : "Add Asset"}
+
+            </h2>
 
             <div className="mb-5">
 
@@ -92,9 +169,9 @@ export default function AssetModal({
             <div className="mb-5">
 
                 <label className="mb-2 block text-sm">
-                    Asset Type
+                    Asset Type 
                 </label>
-
+ 
                 <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
@@ -158,7 +235,10 @@ export default function AssetModal({
                     onClick={handleSave}
                     className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-black"
                 >
-                    Save
+                    {editingIndex !== null
+                        ? "Update Asset"
+                        : "+Add Asset"}
+                    
                 </button>
 
             </div>

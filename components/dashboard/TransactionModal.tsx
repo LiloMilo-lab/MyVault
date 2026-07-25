@@ -186,6 +186,7 @@ export default function TransactionModal({
                 if (!amount) return;
 
                 const newTransaction = {
+                  id: Date.now(),
                   amount: Number(amount),
                   category,
                   type,

@@ -1,12 +1,22 @@
 import { Asset } from "@/hooks/useAssets";
-import { Coins } from "lucide-react";
+import {
+  Coins,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 type AssetListProps = {
   assets: Asset[];
+
+  deleteAsset: (index: number) => void;
+
+  editAsset: (index: number) => void;
 };
 
 export default function AssetList({
   assets,
+  deleteAsset,
+  editAsset,
 }: AssetListProps) {
   return (
         <div
@@ -53,9 +63,31 @@ export default function AssetList({
 
                         </div>
 
-                        <p className="font-bold text-yellow-400">
-                            Rp{asset.value.toLocaleString("id-ID")}
-                        </p>
+                        <div className="text-right">
+
+                            <p className="font-bold text-yellow-400">
+                                Rp{asset.value.toLocaleString("id-ID")}
+                            </p>
+
+                            <div className="mt-2 flex justify-end gap-2">
+
+                                <button
+                                onClick={() => editAsset(index)}
+                                className="text-blue-400 transition hover:text-blue-300"
+                                >
+                                <Pencil className="h-4 w-4" />
+                                </button>
+
+                                <button
+                                onClick={() => deleteAsset(index)}
+                                className="text-red-400 transition hover:text-red-300"
+                                >
+                                <Trash2 className="h-4 w-4" />
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     </div>
 

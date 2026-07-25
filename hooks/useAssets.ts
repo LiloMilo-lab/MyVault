@@ -50,12 +50,10 @@ export function useAssets() {
 
   useEffect(() => {
 
-    if (assets.length > 0) {
       localStorage.setItem(
         "assets",
         JSON.stringify(assets)
       );
-    }
 
   }, [assets]);
 
