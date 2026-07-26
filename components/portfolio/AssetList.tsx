@@ -1,9 +1,21 @@
 import { Asset } from "@/hooks/useAssets";
 import {
   Coins,
+  Bitcoin,
+  Landmark,
+  TrendingUp,
+  Wallet,
   Pencil,
   Trash2,
 } from "lucide-react";
+
+const assetIcons = {
+  Gold: Coins,
+  Crypto: Bitcoin,
+  Stock: TrendingUp,
+  Cash: Wallet,
+  Bank: Landmark,
+};
 
 type AssetListProps = {
   assets: Asset[];
@@ -55,8 +67,20 @@ export default function AssetList({
 
                         <div className="flex items-center gap-3">
 
-                        <Coins className="h-6 w-6 text-yellow-400" />
+                        {(() => {
 
+                            const Icon =
+                            assetIcons[
+                                asset.type as keyof typeof assetIcons
+                            ] || Coins;
+
+                            return (
+                            <Icon
+                                className="h-6 w-6 text-yellow-400"
+                            />
+                            );
+
+                        })()}
                         <div>
 
                             <h3 className="font-semibold">
@@ -74,7 +98,22 @@ export default function AssetList({
 
                         <div className="text-right">
 
-                        <p className="font-bold text-yellow-400">
+                        <p
+                            className={`
+                                font-bold
+                                ${
+                                    asset.type === "Gold"
+                                        ? "text-yellow-400"
+                                        : asset.type === "Crypto"
+                                        ? "text-orange-400"
+                                        : asset.type === "Stock"
+                                        ? "text-emerald-400"
+                                        : asset.type === "Cash"
+                                        ? "text-sky-400"
+                                        : "text-purple-400"
+                                }
+                            `}
+                        >                            
                             Rp{asset.value.toLocaleString("id-ID")}
                         </p>
 

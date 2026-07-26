@@ -6,8 +6,8 @@ type AssetAllocationProps = {
 
 export default function AssetAllocation({
   assets,
-}: AssetAllocationProps) {  
-
+}: AssetAllocationProps) {
+  
   const totalValue = assets.reduce(
     (sum, asset) => sum + asset.value,
     0
@@ -83,7 +83,7 @@ export default function AssetAllocation({
               <div className="mb-2 flex justify-between">
 
                 <span>
-                  {icons[asset.type] ?? "📦"} {asset.name}
+                  {asset.name}
                 </span>
 
                 <span>
@@ -95,9 +95,7 @@ export default function AssetAllocation({
               <div className="h-3 rounded-full bg-neutral-800">
 
                 <div
-                  className={`h-3 rounded-full ${
-                    colors[asset.type] ?? "bg-neutral-500"
-                  }`}
+                  className="h-3 rounded-full bg-emerald-500 transition-all duration-500"
                   style={{
                     width: `${percentage}%`,
                   }}
