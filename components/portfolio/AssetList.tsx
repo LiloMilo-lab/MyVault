@@ -120,7 +120,7 @@ export default function AssetList({
                         <div className="mt-2 flex justify-end gap-2">
 
                             <button
-                            onClick={() => editAsset(index)}
+                            onClick={() => editAsset(asset.id)}
                             className="text-blue-400 transition hover:text-blue-300"
                             >
                             <Pencil className="h-4 w-4" />

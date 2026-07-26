@@ -2,17 +2,32 @@ import { Asset } from "@/hooks/useAssets";
 
 type AssetAllocationProps = {
   assets: Asset[];
+  totalAssetValue: number;
 };
 
 export default function AssetAllocation({
   assets,
+  totalAssetValue,
 }: AssetAllocationProps) {
-  
-  const totalValue = assets.reduce(
-    (sum, asset) => sum + asset.value,
-    0
+
+  const groupedAssets = assets.reduce(
+    (acc, asset) => {
+      acc[asset.type] =
+        (acc[asset.type] || 0) + asset.value;
+
+      return acc;
+    },
+    {} as Record<string, number>
   );
 
+  const colors: Record<string, string> = {
+    Gold: "bg-yellow-500",
+    Crypto: "bg-orange-500",
+    Stock: "bg-emerald-500",
+    Cash: "bg-blue-500",
+    Bank: "bg-purple-500",
+  };
+    
   if (assets.length === 0) {
     return (
       <div
@@ -34,13 +49,6 @@ export default function AssetAllocation({
       </div>
     );
   }
-
-  const colors: Record<string, string> = {
-    Gold: "bg-yellow-500",
-    Crypto: "bg-orange-500",
-    Stock: "bg-emerald-500",
-    Cash: "bg-blue-500",
-  };
 
   const icons: Record<string, string> = {
     Gold: "🥇",
@@ -69,45 +77,46 @@ export default function AssetAllocation({
 
       <div className="space-y-5">
 
-        {assets.map((asset) => {
+        {Object.entries(groupedAssets).map(
+          ([type, value]) => {
 
-          const percentage =
-            totalValue === 0
-              ? 0
-              : (asset.value / totalValue) * 100;
+            const percentage =
+              totalAssetValue === 0
+                ? 0
+                : (value / totalAssetValue) * 100;
 
-          return (
+            return (
 
-            <div key={asset.id}>
+              <div key={type}>
 
-              <div className="mb-2 flex justify-between">
+                <div className="mb-2 flex justify-between">
 
-                <span>
-                  {asset.name}
-                </span>
+                  <span>{type}</span>
 
-                <span>
-                  {percentage.toFixed(1)}%
-                </span>
+                  <span>
+                    {percentage.toFixed(1)}%
+                  </span>
+
+                </div>
+
+                <div className="h-3 rounded-full bg-neutral-800">
+
+                  <div
+                      className={`h-3 rounded-full ${
+                        colors[type] ?? "bg-gray-500"
+                      }`}                    style={{
+                      width: `${percentage}%`,
+                    }}
+                  />
+
+                </div>
 
               </div>
 
-              <div className="h-3 rounded-full bg-neutral-800">
+            );
 
-                <div
-                  className="h-3 rounded-full bg-emerald-500 transition-all duration-500"
-                  style={{
-                    width: `${percentage}%`,
-                  }}
-                />
-
-              </div>
-
-            </div>
-
-          );
-
-        })}
+          }
+        )}
 
       </div>
 

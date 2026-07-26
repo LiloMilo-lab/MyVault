@@ -10,13 +10,22 @@ import { useState } from "react";
 import AssetModal from "@/components/portfolio/AssetModal";
 
 export default function AssetsPage() {
-  const {
+const {
     assets,
     setAssets,
-  } = useAssets();
+    totalAssetValue,
+} = useAssets();
+
+const totalAssets = assets.length;
+  
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] =
     useState<number | null>(null);
+  
+  const averageAsset =
+    assets.length === 0
+      ? 0
+      : totalAssetValue / assets.length;
 
   function deleteAsset(id: number) {
 
@@ -34,10 +43,7 @@ export default function AssetsPage() {
 
   }
 
-  const totalValue = assets.reduce(
-    (sum, asset) => sum + asset.value,
-    0
-  );
+  const totalValue = totalAssetValue;
 
   const assetTypes = new Set(
     assets.map((asset) => asset.type)
@@ -51,7 +57,7 @@ export default function AssetsPage() {
             ? current
             : largest
         );
-
+  
   return (
     <main className="flex min-h-screen bg-neutral-950">
 
@@ -81,16 +87,14 @@ export default function AssetsPage() {
 
                 <AssetCard
                 title="Net Worth"
-                value={`Rp${assets
-                  .reduce((sum, asset) => sum + asset.value, 0)
-                  .toLocaleString("id-ID")}`}
+                value={`Rp${totalAssetValue.toLocaleString("id-ID")}`}                  
                 change="+12.5%"
                 />
 
                 <AssetCard
-                title="Assets"
-                value={assets.length.toString()}
-                change={`${assetTypes} Types`}
+                  title="Assets"
+                  value={assets.length.toString()}
+                  change={`Avg Rp${averageAsset.toLocaleString("id-ID")}`}
                 />
 
                 <AssetCard
@@ -102,17 +106,18 @@ export default function AssetsPage() {
                   }
                   change={
                     largestAsset
-                      ? formatCurrency(largestAsset.value)
+                      ? `Rp${largestAsset.value.toLocaleString("id-ID")}`
                       : "-"
-                  }
-                />
+                  }              
+                  />
 
                 <div className="mt-6 grid gap-6 md:col-span-3 lg:grid-cols-2">
 
-                    <AssetAllocation 
+                    <AssetAllocation
                       assets={assets}
+                      totalAssetValue={totalAssetValue}
                     />
-
+                    
                     <AssetList
                       assets={assets}
                       totalValue={totalValue}

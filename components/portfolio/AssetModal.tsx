@@ -195,6 +195,7 @@ export default function AssetModal({
                     <option>Crypto</option>
                     <option>Cash</option>
                     <option>Stock</option>
+                    <option>Bank</option>
 
                 </select>
 

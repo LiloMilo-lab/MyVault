@@ -61,9 +61,16 @@ export function useAssets() {
 
   }, [assets]);
 
+  const totalAssetValue =
+    assets.reduce(
+      (sum, asset) => sum + asset.value,
+      0
+    );
+
   return {
     assets,
     setAssets,
+    totalAssetValue,
   };
 
 }
