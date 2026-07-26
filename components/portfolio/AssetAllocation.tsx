@@ -1,4 +1,54 @@
-export default function AssetAllocation() {
+import { Asset } from "@/hooks/useAssets";
+
+type AssetAllocationProps = {
+  assets: Asset[];
+};
+
+export default function AssetAllocation({
+  assets,
+}: AssetAllocationProps) {  
+
+  const totalValue = assets.reduce(
+    (sum, asset) => sum + asset.value,
+    0
+  );
+
+  if (assets.length === 0) {
+    return (
+      <div
+        className="
+          rounded-2xl
+          border
+          border-neutral-800
+          bg-neutral-900
+          p-6
+        "
+      >
+        <h2 className="mb-6 text-xl font-bold">
+          Asset Allocation
+        </h2>
+
+        <div className="py-10 text-center text-neutral-500">
+          No assets yet.
+        </div>
+      </div>
+    );
+  }
+
+  const colors: Record<string, string> = {
+    Gold: "bg-yellow-500",
+    Crypto: "bg-orange-500",
+    Stock: "bg-emerald-500",
+    Cash: "bg-blue-500",
+  };
+
+  const icons: Record<string, string> = {
+    Gold: "🥇",
+    Crypto: "₿",
+    Stock: "📈",
+    Cash: "💵",
+  };
+
   return (
     <div
       className="
@@ -19,74 +69,47 @@ export default function AssetAllocation() {
 
       <div className="space-y-5">
 
-        <div>
+        {assets.map((asset) => {
 
-          <div className="mb-2 flex justify-between">
+          const percentage =
+            totalValue === 0
+              ? 0
+              : (asset.value / totalValue) * 100;
 
-            <span>🥇 Gold</span>
+          return (
 
-            <span>50%</span>
+            <div key={asset.id}>
 
-          </div>
+              <div className="mb-2 flex justify-between">
 
-          <div className="h-3 rounded-full bg-neutral-800">
+                <span>
+                  {icons[asset.type] ?? "📦"} {asset.name}
+                </span>
 
-            <div
-              className="h-3 rounded-full bg-yellow-500"
-              style={{
-                width: "50%",
-              }}
-            />
+                <span>
+                  {percentage.toFixed(1)}%
+                </span>
 
-          </div>
+              </div>
 
-        </div>
+              <div className="h-3 rounded-full bg-neutral-800">
 
-        <div>
+                <div
+                  className={`h-3 rounded-full ${
+                    colors[asset.type] ?? "bg-neutral-500"
+                  }`}
+                  style={{
+                    width: `${percentage}%`,
+                  }}
+                />
 
-          <div className="mb-2 flex justify-between">
+              </div>
 
-            <span>📈 Stock</span>
+            </div>
 
-            <span>30%</span>
+          );
 
-          </div>
-
-          <div className="h-3 rounded-full bg-neutral-800">
-
-            <div
-              className="h-3 rounded-full bg-emerald-500"
-              style={{
-                width: "30%",
-              }}
-            />
-
-          </div>
-
-        </div>
-
-        <div>
-
-          <div className="mb-2 flex justify-between">
-
-            <span>₿ Crypto</span>
-
-            <span>20%</span>
-
-          </div>
-
-          <div className="h-3 rounded-full bg-neutral-800">
-
-            <div
-              className="h-3 rounded-full bg-orange-500"
-              style={{
-                width: "20%",
-              }}
-            />
-
-          </div>
-
-        </div>
+        })}
 
       </div>
 

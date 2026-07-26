@@ -5,6 +5,7 @@ import AssetCard from "@/components/portfolio/AssetCard";
 import AssetList from "@/components/portfolio/AssetList";
 import AssetAllocation from "@/components/portfolio/AssetAllocation";
 import { useAssets } from "@/hooks/useAssets";
+import { formatCurrency } from "@/lib/format";
 import { useState } from "react";
 import AssetModal from "@/components/portfolio/AssetModal";
 
@@ -14,24 +15,42 @@ export default function AssetsPage() {
     setAssets,
   } = useAssets();
   const [isOpen, setIsOpen] = useState(false);
-  const [editingIndex, setEditingIndex] =
+  const [editingId, setEditingId] =
     useState<number | null>(null);
 
-  function deleteAsset(index: number) {
+  function deleteAsset(id: number) {
 
     setAssets((prev) =>
-      prev.filter((_, i) => i !== index)
+      prev.filter((asset) => asset.id !== id)
     );
 
   }
 
-  function editAsset(index: number) {
+  function editAsset(id: number) {
 
-    setEditingIndex(index);
+    setEditingId(id);
 
     setIsOpen(true);
 
   }
+
+  const totalValue = assets.reduce(
+    (sum, asset) => sum + asset.value,
+    0
+  );
+
+  const assetTypes = new Set(
+    assets.map((asset) => asset.type)
+  ).size;
+
+  const largestAsset =
+    assets.length === 0
+      ? null
+      : assets.reduce((largest, current) =>
+          current.value > largest.value
+            ? current
+            : largest
+        );
 
   return (
     <main className="flex min-h-screen bg-neutral-950">
@@ -44,9 +63,19 @@ export default function AssetsPage() {
 
         <section className="flex-1 p-8">
 
-            <h1 className="mb-8 text-4xl font-bold">
+            <div className="mb-8">
+
+              <h1 className="text-4xl font-bold">
                 Portfolio
-            </h1>
+              </h1>
+
+              <p className="mt-2 text-neutral-500">
+                Total Asset Value:
+                {" "}
+                {formatCurrency(totalValue)}
+              </p>
+
+            </div>
 
             <div className="grid gap-6 md:grid-cols-3">
 
@@ -61,23 +90,32 @@ export default function AssetsPage() {
                 <AssetCard
                 title="Assets"
                 value={assets.length.toString()}
-                change="+1 Asset"
+                change={`${assetTypes} Types`}
                 />
 
                 <AssetCard
-                title="Investments"
-                value={`Rp${assets
-                  .reduce((sum, asset) => sum + asset.value, 0)
-                  .toLocaleString("id-ID")}`}
-                change="+5.8%"
+                  title="Largest Asset"
+                  value={
+                    largestAsset
+                      ? largestAsset.name
+                      : "-"
+                  }
+                  change={
+                    largestAsset
+                      ? formatCurrency(largestAsset.value)
+                      : "-"
+                  }
                 />
 
                 <div className="mt-6 grid gap-6 md:col-span-3 lg:grid-cols-2">
 
-                    <AssetAllocation />
+                    <AssetAllocation 
+                      assets={assets}
+                    />
 
                     <AssetList
                       assets={assets}
+                      totalValue={totalValue}
                       deleteAsset={deleteAsset}
                       editAsset={editAsset}
                     />
@@ -87,7 +125,7 @@ export default function AssetsPage() {
                 <button
                   onClick={() => {
 
-                      setEditingIndex(null);
+                      setEditingId(null);
 
                       setIsOpen(true);
 
@@ -103,8 +141,8 @@ export default function AssetsPage() {
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               setAssets={setAssets}
-              editingIndex={editingIndex}
-              setEditingIndex={setEditingIndex}
+              editingId={editingId}
+              setEditingId={setEditingId}
               assets={assets}
             />
 

@@ -10,8 +10,8 @@ type TransactionModalProps = {
   transactions: Transaction[];
   setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   
-  editingIndex: number | null;
-  setEditingIndex: React.Dispatch<React.SetStateAction<number | null>>;
+  editingId: number | null;
+  setEditingId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 export default function TransactionModal({
@@ -42,7 +42,7 @@ export default function TransactionModal({
   useEffect(() => {
     if (!isOpen) return;
 
-    if (editingIndex !== null) {
+    if (editingId !== null) {
       const transaction = transactions.find(
         (t) => t.id === editingId
       );      if (!transaction) return;
@@ -57,7 +57,7 @@ export default function TransactionModal({
       setType("Income");
       setDate(new Date().toISOString().split("T")[0]);
     }
-  }, [isOpen, editingIndex, transactions]);
+  }, [isOpen, editingId, transactions]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -75,7 +75,7 @@ export default function TransactionModal({
         handleEscape
       );
     };
-  }, [setIsOpen, setEditingIndex]);
+  }, [setIsOpen, setEditingId]);
 
   if (!isOpen) return null;
 
@@ -93,7 +93,7 @@ export default function TransactionModal({
       >
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">
-            {editingIndex !== null
+            {editingId !== null
               ? "✏️ Edit Transaction"
               : "➕ Add Transaction"}
           </h2>
@@ -187,14 +187,18 @@ export default function TransactionModal({
                 if (!amount) return;
 
                 const newTransaction = {
-                  id: Date.now(),
+                  id:
+                    editingId !== null
+                      ? editingId
+                      : Date.now(),
+
                   amount: Number(amount),
                   category,
                   type,
                   date,
                 };
 
-                if (editingIndex !== null) {
+                if (editingId !== null) {
 
                   const updatedTransactions = transactions.map((t) =>
                     t.id === editingId ? newTransaction : t
@@ -221,7 +225,7 @@ export default function TransactionModal({
               }}
             className="rounded-xl bg-emerald-500 px-5 py-2 font-semibold text-black transition hover:bg-emerald-400"
           >
-            {editingIndex !== null ? "Update" : "Add"}
+            {editingId !== null ? "Update" : "Add"}
           </button>
         </div>
       </div>

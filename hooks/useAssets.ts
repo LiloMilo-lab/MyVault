@@ -5,7 +5,8 @@ export type Asset = {
   name: string;
   type: string;
   value: number;
-};
+  notes?: string;
+}
 
 export function useAssets() {
 

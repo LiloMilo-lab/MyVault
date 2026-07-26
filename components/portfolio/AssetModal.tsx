@@ -14,9 +14,9 @@ type AssetModalProps = {
     React.SetStateAction<Asset[]>
   >;
 
-  editingIndex: number | null;
+  editingId: number | null;
 
-  setEditingIndex: React.Dispatch<
+  setEditingId: React.Dispatch<
     React.SetStateAction<number | null>
   >;
 };
@@ -26,8 +26,8 @@ export default function AssetModal({
     setIsOpen,
     assets,
     setAssets,
-    editingIndex,
-    setEditingIndex,
+    editingId,
+    setEditingId,
 }: AssetModalProps) {
 
     const [name, setName] = useState("");
@@ -36,19 +36,18 @@ export default function AssetModal({
 
     useEffect(() => {
 
-        if (
+        const editingAsset = assets.find(
+            (asset) => asset.id === editingId
+        );
 
-            editingIndex !== null &&
-            assets[editingIndex]
+        if (editingId !== null && editingAsset) {
 
-        ) {
+            setName(editingAsset.name);
 
-            setName(assets[editingIndex].name);
-
-            setType(assets[editingIndex].type);
+            setType(editingAsset.type);
 
             setValue(
-                assets[editingIndex].value.toString()
+                editingAsset.value.toString()
             );
 
         } else {
@@ -61,11 +60,10 @@ export default function AssetModal({
 
         }
 
-    }, [editingIndex, assets]);
-
+    }, [editingId, assets, isOpen]);
     function handleClose() {
 
-        setEditingIndex(null);
+        setEditingId(null);
 
         setIsOpen(false);
 
@@ -75,14 +73,15 @@ export default function AssetModal({
 
         if (!name || !value) return;
 
-        if (editingIndex !== null) {
+        if (editingId !== null) {
 
             setAssets((prev) =>
 
-                prev.map((asset, index) =>
+                prev.map((asset) =>
 
-                    index === editingIndex
+                    asset.id === editingId
                         ? {
+                            ...asset,
                             name,
                             type,
                             value: Number(value),
@@ -100,10 +99,7 @@ export default function AssetModal({
                 ...prev,
 
                 {
-                    id:
-                    editingIndex !== null
-                        ? assets[editingIndex].id
-                        : Date.now(),
+                    id: Date.now(),
 
                     name,
                     type,
@@ -117,7 +113,7 @@ export default function AssetModal({
         setType("Gold");
         setValue("");
 
-        setEditingIndex(null);
+        setEditingId(null);
 
         setIsOpen(false);
 
@@ -136,7 +132,7 @@ export default function AssetModal({
         >
             <h2 className="mb-6 text-2xl font-bold">
 
-                {editingIndex !== null
+                {editingId !== null
                     ? "Edit Asset"
                     : "Add Asset"}
 
@@ -239,7 +235,7 @@ export default function AssetModal({
                     onClick={handleSave}
                     className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-black"
                 >
-                    {editingIndex !== null
+                    {editingId !== null
                         ? "Update Asset"
                         : "+Add Asset"}
                     
