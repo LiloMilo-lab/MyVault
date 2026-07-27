@@ -17,6 +17,7 @@ import { formatCurrency } from "@/lib/format";
 import {useStatistics} from "@/hooks/useStatistics";
 import CategoryBreakdown from "@/components/dashboard/CategoryBreakdown";
 import MonthlySummary from "@/components/dashboard/MonthlySummary";
+import Link from "next/link";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,6 +113,9 @@ export default function Home() {
       }
 
     });
+
+    const recentTransactions =
+      sortedTransactions.slice(0, 5);
 
   if (!mounted) return null;
 
@@ -237,7 +241,7 @@ export default function Home() {
               />
 
               <TransactionList
-                transactions={sortedTransactions}
+                transactions={recentTransactions}
                 deleteTransaction={deleteTransaction}
                 setEditingId={setEditingId}
                 setIsOpen={setIsOpen}
@@ -248,6 +252,24 @@ export default function Home() {
                 sortBy={sortBy}
                 setSortBy={setSortBy}
               />
+
+              <div className="mt-4 flex justify-end">
+
+                <Link
+                  href="/transactions"
+                  className="
+                    text-sm
+                    font-semibold
+                    text-emerald-400
+                    transition
+                    hover:text-emerald-300
+                  "
+                >
+                  View All →
+                </Link>
+
+              </div>
+
             </div>
 
             <button

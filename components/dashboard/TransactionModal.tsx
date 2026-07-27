@@ -38,6 +38,9 @@ export default function TransactionModal({
   const [category, setCategory] = useState("General");
   const [type, setType] = useState<"Income" | "Expense">("Income");
   const [date, setDate] = useState("");
+  const [notes, setNotes] = useState("");
+  const [account, setAccount] = useState("Cash");
+  const [currency, setCurrency] = useState("IDR");
 
   useEffect(() => {
     if (!isOpen) return;
@@ -51,6 +54,9 @@ export default function TransactionModal({
       setCategory(transaction.category);
       setType(transaction.type);
       setDate(transaction.date);
+      setNotes(transaction.notes);
+      setAccount(transaction.account);
+      setCurrency(transaction.currency);
     } else {
       setAmount("");
       setCategory("General");
@@ -100,12 +106,15 @@ export default function TransactionModal({
       );
     } else {
       const newTransaction = {
-        id: Date.now(),
-        amount: parsedAmount,
-        category,
-        type,
-        date,
-      } as Transaction;
+      id: editingId ?? Date.now(),
+      amount: parsedAmount,
+      category,
+      type,
+      date,
+      notes,
+      account,
+      currency,
+      };
 
       setTransactions((prev) => [...prev, newTransaction]);
     }
@@ -215,10 +224,79 @@ export default function TransactionModal({
             />
           </div>
 
+          <div className="mt-4">
+
+            <label className="mb-2 block text-sm text-neutral-400">
+              Account
+            </label>
+
+            <select
+              value={account}
+              onChange={(e)=>setAccount(e.target.value)}
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+            >
+
+              <option>Cash</option>
+              <option>BCA</option>
+              <option>Mandiri</option>
+              <option>BRI</option>
+              <option>BNI</option>
+              <option>Dana</option>
+              <option>OVO</option>
+              <option>GoPay</option>
+
+            </select>
+
+          </div>
+
+          <div className="mt-4">
+
+            <label className="mb-2 block text-sm text-neutral-400">
+              Currency
+            </label>
+
+            <select
+              value={currency}
+              onChange={(e)=>setCurrency(e.target.value)}
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+            >
+
+              <option>IDR</option>
+              <option>USD</option>
+              <option>SGD</option>
+              <option>MYR</option>
+
+            </select>
+
+          </div>
+
+          <div className="mt-4">
+
+            <label className="mb-2 block text-sm text-neutral-400">
+              Notes
+            </label>
+
+            <textarea
+              value={notes}
+              onChange={(e)=>setNotes(e.target.value)}
+              rows={3}
+              placeholder="Optional..."
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+            />
+
+          </div>
+
           <div className="mt-8 flex justify-end gap-3">
             <button
               type="button"
               onClick={() => {
+                setAmount("");
+                setCategory("General");
+                setType("Income");
+                setDate(new Date().toISOString().split("T")[0]);
+                setNotes("");
+                setAccount("Cash");
+                setCurrency("IDR");
                 setEditingId(null);
                 setIsOpen(false);
               }}
