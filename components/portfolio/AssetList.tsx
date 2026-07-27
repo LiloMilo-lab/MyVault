@@ -20,8 +20,8 @@ const assetIcons = {
 type AssetListProps = {
   assets: Asset[];
   totalValue: number;
-  deleteAsset: (index: number) => void;
-  editAsset: (index: number) => void;
+  deleteAsset: (id: number) => void;
+  editAsset: (id: number) => void;
 };
 
 export default function AssetList({
@@ -127,7 +127,7 @@ export default function AssetList({
                             </button>
 
                             <button
-                            onClick={() => deleteAsset(index)}
+                            onClick={() => deleteAsset(asset.id)}
                             className="text-red-400 transition hover:text-red-300"
                             >
                             <Trash2 className="h-4 w-4" />

@@ -77,6 +77,43 @@ export default function TransactionModal({
     };
   }, [setIsOpen, setEditingId]);
 
+  const handleSave = () => {
+    const parsedAmount = Number(amount);
+
+    if (!amount || Number.isNaN(parsedAmount)) {
+      return;
+    }
+
+    if (editingId !== null) {
+      setTransactions((prev) =>
+        prev.map((transaction) =>
+          transaction.id === editingId
+            ? {
+                ...transaction,
+                amount: parsedAmount,
+                category,
+                type,
+                date,
+              }
+            : transaction
+        )
+      );
+    } else {
+      const newTransaction = {
+        id: Date.now(),
+        amount: parsedAmount,
+        category,
+        type,
+        date,
+      } as Transaction;
+
+      setTransactions((prev) => [...prev, newTransaction]);
+    }
+
+    setEditingId(null);
+    setIsOpen(false);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -109,125 +146,95 @@ export default function TransactionModal({
           </button>
         </div>
 
-        <div className="mt-6">
-          <label className="mb-2 block text-sm text-neutral-400">
-            Amount
-          </label>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+        >
 
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0"
-            className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3 outline-none focus:border-emerald-500"
-          />
-        </div>
-
-        <div className="mt-4">
-          <label className="mb-2 block text-sm text-neutral-400">
-            Category
-          </label>
-
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
-          >
-            {categories.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mt-4">
+          <div className="mt-6">
             <label className="mb-2 block text-sm text-neutral-400">
-                Type
+              Amount
+            </label>
+
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0"
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3 outline-none focus:border-emerald-500"
+            />
+          </div>
+
+          <div className="mt-4">
+            <label className="mb-2 block text-sm text-neutral-400">
+              Category
             </label>
 
             <select
-                value={type}
-                onChange={(e) => 
-                    setType(e.target.value as "Income" | "Expense")
-                }
-                className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
             >
-               <option>Income</option>
-               <option>Expense</option>
+              {categories.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
             </select>
-        </div>
+          </div>
 
-        <div className="mt-4">
-          <label className="mb-2 block text-sm text-neutral-400">
-            Date
-          </label>
+          <div className="mt-4">
+              <label className="mb-2 block text-sm text-neutral-400">
+                  Type
+              </label>
 
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
-          />
-        </div>
+              <select
+                  value={type}
+                  onChange={(e) => 
+                      setType(e.target.value as "Income" | "Expense")
+                  }
+                  className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+              >
+                <option>Income</option>
+                <option>Expense</option>
+              </select>
+          </div>
 
-        <div className="mt-8 flex justify-end gap-3">
-          <button
-            onClick={() => {
-              setEditingId(null);
-              setIsOpen(false);
-            }}
-            className="rounded-xl border border-neutral-700 px-5 py-2"
-          >
-            Cancel
-          </button>
+          <div className="mt-4">
+            <label className="mb-2 block text-sm text-neutral-400">
+              Date
+            </label>
 
-          <button
-                onClick={() => {
-                if (!amount) return;
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
+            />
+          </div>
 
-                const newTransaction = {
-                  id:
-                    editingId !== null
-                      ? editingId
-                      : Date.now(),
-
-                  amount: Number(amount),
-                  category,
-                  type,
-                  date,
-                };
-
-                if (editingId !== null) {
-
-                  const updatedTransactions = transactions.map((t) =>
-                    t.id === editingId ? newTransaction : t
-                  );
-
-                  setTransactions(updatedTransactions);
-
-                } else {
-
-                  setTransactions([
-                    ...transactions,
-                    newTransaction,
-                  ]);
-
-                }
-
-                setAmount("");
-                setCategory("General");
-                setType("Income");
-                setDate(new Date().toISOString().split("T")[0]);
-
+          <div className="mt-8 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => {
                 setEditingId(null);
                 setIsOpen(false);
               }}
-            className="rounded-xl bg-emerald-500 px-5 py-2 font-semibold text-black transition hover:bg-emerald-400"
-          >
-            {editingId !== null ? "Update" : "Add"}
-          </button>
-        </div>
+              className="rounded-xl border border-neutral-700 px-5 py-2"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="rounded-xl bg-emerald-500 px-5 py-2 font-semibold text-black transition hover:bg-emerald-400"
+            >
+              {editingId !== null ? "Update" : "Add"}
+            </button>
+          </div>
+        </form>  
       </div>
     </div>
   );

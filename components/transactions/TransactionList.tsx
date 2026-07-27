@@ -18,7 +18,7 @@ type TransactionListProps = {
   transactions: Transaction[];
   deleteTransaction: (index: number) => void;
 
-  setEditingIndex: React.Dispatch<
+  setEditingId: React.Dispatch<
     React.SetStateAction<number | null>
   >;
 
@@ -47,7 +47,7 @@ type TransactionListProps = {
 export default function TransactionList({
   transactions,
   deleteTransaction,
-  setEditingIndex,
+  setEditingId,
   setIsOpen,
   search,
   setSearch,

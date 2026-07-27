@@ -11,6 +11,7 @@ export type Asset = {
 export function useAssets() {
 
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
 
@@ -20,8 +21,10 @@ export function useAssets() {
 
       const parsed: Asset[] = JSON.parse(saved);
 
-      if (parsed.length > 0) {
+      console.log("LOAD ASSETS", parsed);
 
+      if (parsed.length > 0) {
+        
         setAssets(parsed);
 
       } else {
@@ -50,16 +53,21 @@ export function useAssets() {
 
     }
 
+    setMounted(true);
+
   }, []);
 
   useEffect(() => {
 
-      localStorage.setItem(
-        "assets",
-        JSON.stringify(assets)
-      );
+    if (!mounted) return;
 
-  }, [assets]);
+    console.log("SAVE ASSETS", assets);
+
+    localStorage.setItem(
+      "assets",
+      JSON.stringify(assets)
+    );
+  }, [assets, mounted]);
 
   const totalAssetValue =
     assets.reduce(

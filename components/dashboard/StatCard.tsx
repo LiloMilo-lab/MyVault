@@ -14,11 +14,12 @@ export default function StatCard({
 }: StatCardProps) {
   return (
     <div className="
+        h-48
         rounded-2xl
         border
         border-neutral-800
         bg-neutral-900
-        p-6
+        p-8
         transition-all
         duration-300
         hover:-translate-y-1
@@ -37,7 +38,7 @@ export default function StatCard({
 
         </div>
 
-        <h2 className="mt-4 text-3xl font-bold tracking-tight text-white">
+        <h2 className="mt-4 text-3xl font-bold break-words tracking-tight text-white">
             {value}
         </h2>
 

@@ -138,111 +138,119 @@ export default function AssetModal({
 
             </h2>
 
-            <div className="mb-5">
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSave();
+                }}
+            >
 
-                <label className="mb-2 block text-sm">
-                    Asset Name
-                </label>
+                <div className="mb-5">
 
-                <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="
-                    w-full
-                    rounded-xl
-                    border
-                    border-neutral-700
-                    bg-neutral-800
-                    p-3
-                    transition-all
-                    duration-300
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-emerald-500
-                    focus:border-emerald-500
-                    "                    
-                    placeholder="Gold"
-                />
+                    <label className="mb-2 block text-sm">
+                        Asset Name
+                    </label>
 
-            </div>
+                    <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="
+                        w-full
+                        rounded-xl
+                        border
+                        border-neutral-700
+                        bg-neutral-800
+                        p-3
+                        transition-all
+                        duration-300
+                        focus:outline-none
+                        focus:ring-2
+                        focus:ring-emerald-500
+                        focus:border-emerald-500
+                        "                    
+                        placeholder="Gold"
+                    />
 
-            <div className="mb-5">
+                    <div className="mb-5">
+                        <label className="mb-2 block text-sm">
+                            Asset Type 
+                        </label>
+        
+                        <select
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            className="
+                            w-full
+                            rounded-xl
+                            border
+                            border-neutral-700
+                            bg-neutral-800
+                            p-3
+                            transition-all
+                            duration-300
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-emerald-500
+                            focus:border-emerald-500
+                            "                
+                        >
 
-                <label className="mb-2 block text-sm">
-                    Asset Type 
-                </label>
- 
-                <select
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className="
-                    w-full
-                    rounded-xl
-                    border
-                    border-neutral-700
-                    bg-neutral-800
-                    p-3
-                    transition-all
-                    duration-300
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-emerald-500
-                    focus:border-emerald-500
-                    "                
-                >
+                            <option>Gold</option>
+                            <option>Crypto</option>
+                            <option>Cash</option>
+                            <option>Stock</option>
+                            <option>Bank</option>
 
-                    <option>Gold</option>
-                    <option>Crypto</option>
-                    <option>Cash</option>
-                    <option>Stock</option>
-                    <option>Bank</option>
+                        </select>
 
-                </select>
+                    </div>
 
-            </div>
+                    <div className="mb-6">
 
-            <div className="mb-6">
+                        <label className="mb-2 block text-sm">
+                            Value
+                        </label>
 
-                <label className="mb-2 block text-sm">
-                    Value
-                </label>
+                        <input
+                            type="number"
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            className="
+                            w-full
+                            rounded-xl
+                            border
+                            border-neutral-700
+                            bg-neutral-800
+                            p-3
+                            transition-all
+                            duration-300
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-emerald-500
+                            focus:border-emerald-500
+                            "                    
+                            placeholder="250000"
+                        />
 
-                <input
-                    type="number"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    className="
-                    w-full
-                    rounded-xl
-                    border
-                    border-neutral-700
-                    bg-neutral-800
-                    p-3
-                    transition-all
-                    duration-300
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-emerald-500
-                    focus:border-emerald-500
-                    "                    
-                    placeholder="250000"
-                />
+                    </div>
 
-            </div>
+                    <div className="flex justify-end gap-3">
 
-            <div className="flex justify-end gap-3">
+                        <button
+                            type="submit"
+                            className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-black"
+                        >
+                            {editingId !== null
+                                ? "Update Asset"
+                                : "+Add Asset"}
+                                
+                        </button>
 
-                <button
-                    onClick={handleSave}
-                    className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-black"
-                >
-                    {editingId !== null
-                        ? "Update Asset"
-                        : "+Add Asset"}
-                    
-                </button>
+                    </div>
 
-            </div>
+                </div>
+
+            </form>
 
         </div>
 
