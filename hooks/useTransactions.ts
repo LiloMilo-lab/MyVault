@@ -10,7 +10,16 @@ export function useTransactions() {
       localStorage.getItem("transactions");
 
     if (saved) {
-      setTransactions(JSON.parse(saved));
+      const parsed: Transaction[] = JSON.parse(saved);
+
+      const migrated = parsed.map((transaction) => ({
+        account: "Cash",
+        currency: "IDR",
+        notes: "",
+        ...transaction,
+      }));
+
+      setTransactions(migrated);
     }
 
     setMounted(true);

@@ -2,7 +2,7 @@
 
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
-import TransactionList from "@/components/transactions/TransactionList";
+import TransactionTable from "@/components/transactions/TransactionTable";
 import TransactionModal from "@/components/dashboard/TransactionModal";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useStatistics } from "@/hooks/useStatistics";
@@ -17,38 +17,47 @@ import StatCard from "@/components/dashboard/StatCard";
 import { useState } from "react";
 
 export default function TransactionsPage() {
-    const [isOpen, setIsOpen] = useState(false);
 
-const {
-  transactions,
-  setTransactions,
-  mounted,
-} = useTransactions();
+  function editTransaction(id: number) {
 
-const {
-  cash,
-  totalIncome,
-  totalExpense,
-  totalTransactions,
-} = useStatistics(transactions);
+    setEditingId(id);
 
-const [editingId, setEditingId] =
-  useState<number | null>(null);
+    setIsOpen(true);
 
-const [search, setSearch] = useState("");
+  }
 
-const [filter, setFilter] = useState<
-  "All" | "Income" | "Expense"
->("All");
+  const [isOpen, setIsOpen] = useState(false);
 
-const [sortBy, setSortBy] = useState<
-  "Newest" | "Oldest" | "Highest" | "Lowest"
->("Newest");
+  const {
+    transactions,
+    setTransactions,
+    mounted,
+  } = useTransactions();
 
-const deleteTransaction = (id: number) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this transaction?"
-  );
+  const {
+    cash,
+    totalIncome,
+    totalExpense,
+    totalTransactions,
+  } = useStatistics(transactions);
+
+  const [editingId, setEditingId] =
+    useState<number | null>(null);
+
+  const [search, setSearch] = useState("");
+
+  const [filter, setFilter] = useState<
+    "All" | "Income" | "Expense"
+  >("All");
+
+  const [sortBy, setSortBy] = useState<
+    "Newest" | "Oldest" | "Highest" | "Lowest"
+  >("Newest");
+
+  const deleteTransaction = (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this transaction?"
+    );
 
   if (!confirmDelete) return;
 
@@ -162,19 +171,12 @@ if (!mounted) return null;
 
             </div>
 
-            <TransactionList
+            <TransactionTable
                 transactions={sortedTransactions}
+                editTransaction={editTransaction}
                 deleteTransaction={deleteTransaction}
-                setEditingId={setEditingId}
-                setIsOpen={setIsOpen}
-                search={search}
-                setSearch={setSearch}
-                filter={filter}
-                setFilter={setFilter}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
             />
-
+            
             <button
                 onClick={() => setIsOpen(true)}
                 className="

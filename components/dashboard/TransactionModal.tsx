@@ -48,12 +48,15 @@ export default function TransactionModal({
     if (editingId !== null) {
       const transaction = transactions.find(
         (t) => t.id === editingId
-      );      if (!transaction) return;
+      );      
+      
+      if (!transaction) return;
 
       setAmount(transaction.amount.toString());
       setCategory(transaction.category);
       setType(transaction.type);
       setDate(transaction.date);
+
       setNotes(transaction.notes);
       setAccount(transaction.account);
       setCurrency(transaction.currency);
@@ -62,6 +65,9 @@ export default function TransactionModal({
       setCategory("General");
       setType("Income");
       setDate(new Date().toISOString().split("T")[0]);
+      setAccount("Cash");
+      setCurrency("IDR");
+      setNotes("");
     }
   }, [isOpen, editingId, transactions]);
 
@@ -100,6 +106,9 @@ export default function TransactionModal({
                 category,
                 type,
                 date,
+                account,
+                currency,
+                notes,
               }
             : transaction
         )
