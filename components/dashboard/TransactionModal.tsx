@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
+import { syncPortfolio } from "@/lib/syncPortfolio";
+import { useAssets } from "@/hooks/useAssets";
 
 type TransactionModalProps = {
   isOpen: boolean;
@@ -131,6 +133,11 @@ export default function TransactionModal({
     setEditingId(null);
     setIsOpen(false);
   };
+
+  const {
+    assets,
+    setAssets,
+  } = useAssets();
 
   if (!isOpen) return null;
 

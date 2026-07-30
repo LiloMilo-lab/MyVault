@@ -42,6 +42,23 @@ type TransactionListProps = {
       "Newest" | "Oldest" | "Highest" | "Lowest"
     >
   >;
+
+  dateFilter:
+    "All" |
+    "Today" |
+    "Week" |
+    "Month" |
+    "Year";
+
+  setDateFilter:
+  React.Dispatch<
+  React.SetStateAction<
+    "All" |
+    "Today" |
+    "Week" |
+    "Month" |
+    "Year"
+  >>;
 };
 
 export default function TransactionList({
@@ -54,7 +71,9 @@ export default function TransactionList({
   filter,
   setFilter,
   sortBy,
-  setSortBy
+  setSortBy,
+  dateFilter,
+  setDateFilter,
 }: TransactionListProps) {
   return (
     <div
