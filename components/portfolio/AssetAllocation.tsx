@@ -1,4 +1,5 @@
 import { Asset } from "@/hooks/useAssets";
+import { calculateAllocation } from "@/lib/portfolio/calculateAllocation";
 
 type AssetAllocationProps = {
   assets: Asset[];
@@ -10,15 +11,8 @@ export default function AssetAllocation({
   totalAssetValue,
 }: AssetAllocationProps) {
 
-  const groupedAssets = assets.reduce(
-    (acc, asset) => {
-      acc[asset.type] =
-        (acc[asset.type] || 0) + asset.value;
-
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+const allocations =
+  calculateAllocation(assets);
 
   const colors: Record<string, string> = {
     Gold: "bg-yellow-500",
@@ -77,24 +71,19 @@ export default function AssetAllocation({
 
       <div className="space-y-5">
 
-        {Object.entries(groupedAssets).map(
-          ([type, value]) => {
-
-            const percentage =
-              totalAssetValue === 0
-                ? 0
-                : (value / totalAssetValue) * 100;
+        {allocations.map(
+          (allocation) => {
 
             return (
 
-              <div key={type}>
+              <div key={allocation.type}>
 
                 <div className="mb-2 flex justify-between">
 
-                  <span>{type}</span>
+                  <span>{allocation.type}</span>
 
                   <span>
-                    {percentage.toFixed(1)}%
+                    {allocation.percentage.toFixed(1)}%
                   </span>
 
                 </div>
@@ -103,9 +92,9 @@ export default function AssetAllocation({
 
                   <div
                       className={`h-3 rounded-full ${
-                        colors[type] ?? "bg-gray-500"
+                        colors[allocation.type] ?? "bg-gray-500"
                       }`}                    style={{
-                      width: `${percentage}%`,
+                      width: `${allocation.percentage}%`,
                     }}
                   />
 

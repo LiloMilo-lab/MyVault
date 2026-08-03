@@ -9,6 +9,16 @@ import { formatCurrency } from "@/lib/format";
 import { useState } from "react";
 import AssetModal from "@/components/portfolio/AssetModal";
 
+import { calculateNetWorth } from "@/lib/portfolio/calculateNetWorth";
+import { calculateLargestAsset } from "@/lib/portfolio/calculateLargestAsset";
+import { calculateAverageAsset } from "@/lib/portfolio/calculateAverageAsset";
+import { calculateAssetTypes } from "@/lib/portfolio/calculateAssetTypes";
+import { calculateDiversification } from "@/lib/portfolio/calculateDiversification";
+import { calculateAllocation } from "@/lib/portfolio/calculateAllocation";
+import { calculateRecommendation } from "@/lib/portfolio/calculateRecommendation";
+import { usePortfolioHistory } from "@/hooks/usePortfolioHistory";
+import PortfolioChart from "@/components/portfolio/PortfolioChart";
+
 export default function AssetsPage() {
 const {
     assets,
@@ -16,17 +26,15 @@ const {
     totalAssetValue,
 } = useAssets();
 
-const totalAssets = assets.length;
+const history =
+  usePortfolioHistory(
+    totalAssetValue
+  );
   
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] =
     useState<number | null>(null);
   
-  const averageAsset =
-    assets.length === 0
-      ? 0
-      : totalAssetValue / assets.length;
-
   function deleteAsset(id: number) {
 
     setAssets((prev) =>
@@ -42,22 +50,44 @@ const totalAssets = assets.length;
     setIsOpen(true);
 
   }
+  
+  const averageAsset =
+    calculateAverageAsset(assets);
 
-  const totalValue = totalAssetValue;
+  const netWorth =
+    calculateNetWorth(assets);
 
-  const assetTypes = new Set(
-    assets.map((asset) => asset.type)
-  ).size;
+  const assetTypes =
+    calculateAssetTypes(assets);
 
   const largestAsset =
-    assets.length === 0
-      ? null
-      : assets.reduce((largest, current) =>
-          current.value > largest.value
-            ? current
-            : largest
-        );
+    calculateLargestAsset(assets);
+
+const allocation =
+  calculateAllocation(assets);
+
+const diversificationScore =
+  calculateDiversification(
+    allocation
+  );
+
+const recommendation =
+  calculateRecommendation(
+    allocation
+  );
   
+const diversificationLabel =
+  diversificationScore >= 80
+    ? "Excellent"
+
+    : diversificationScore >= 60
+    ? "Good"
+
+    : diversificationScore >= 40
+    ? "Fair"
+
+    : "Poor";
+    
   return (
     <main className="flex min-h-screen bg-neutral-950">
 
@@ -78,7 +108,7 @@ const totalAssets = assets.length;
               <p className="mt-2 text-neutral-500">
                 Total Asset Value:
                 {" "}
-                {formatCurrency(totalValue)}
+                {formatCurrency(totalAssetValue)}
               </p>
 
             </div>
@@ -86,15 +116,15 @@ const totalAssets = assets.length;
             <div className="grid gap-6 md:grid-cols-3">
 
                 <AssetCard
-                title="Net Worth"
-                value={`Rp${totalAssetValue.toLocaleString("id-ID")}`}                  
-                change="+12.5%"
+                  title="Net Worth"
+                  value={formatCurrency(netWorth)}
+                  change="+12.5%"
                 />
 
                 <AssetCard
-                  title="Assets"
-                  value={assets.length.toString()}
-                  change={`Avg Rp${averageAsset.toLocaleString("id-ID")}`}
+                  title="Diversification"
+                  value={`${diversificationScore}/100`}
+                  change={diversificationLabel}
                 />
 
                 <AssetCard
@@ -117,13 +147,59 @@ const totalAssets = assets.length;
                       assets={assets}
                       totalAssetValue={totalAssetValue}
                     />
+
+                    <div
+                      className="
+                        rounded-2xl
+                        border
+                        border-neutral-800
+                        bg-neutral-900
+                        p-6
+                      "
+                    >
+
+                      <h2 className="text-xl font-bold">
+                        💡 Portfolio Recommendation
+                      </h2>
+
+                      <p
+                        className={`
+                          mt-5
+                          text-lg
+                          font-semibold
+
+                          ${
+                            recommendation.status === "Warning"
+                              ? "text-red-400"
+                              : recommendation.status === "Balanced"
+                              ? "text-yellow-400"
+                              : "text-emerald-400"
+                          }
+                        `}
+                      >
+                        {recommendation.status}
+                      </p>
+
+                      <p className="mt-3 text-neutral-300 leading-7">
+                        {recommendation.message}
+                      </p>
+
+                    </div>
+
+                    <div className="mt-6">
+                      <PortfolioChart
+                        history={history}
+                      />
+                    </div>
                     
-                    <AssetList
-                      assets={assets}
-                      totalValue={totalValue}
-                      deleteAsset={deleteAsset}
-                      editAsset={editAsset}
-                    />
+                    <div className="mt-6">
+                      <AssetList
+                        assets={assets}
+                        totalValue={totalAssetValue}
+                        deleteAsset={deleteAsset}
+                        editAsset={editAsset}
+                      />
+                    </div>
 
                 </div>
 

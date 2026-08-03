@@ -50,9 +50,6 @@ export default function TransactionsPage() {
   const [editingId, setEditingId] =
     useState<number | null>(null);
   
-  const [showActions, setShowActions] =
-    useState(false);
-
   const [search, setSearch] = useState("");
 
   const [filter, setFilter] = useState<
