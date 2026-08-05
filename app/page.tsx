@@ -7,6 +7,8 @@ import {
   Wallet,
   Landmark,
   TrendingUp,
+  ShieldCheck,
+  Brain,
 } from "lucide-react";
 import { useState } from "react";
 import TransactionModal from "@/components/dashboard/TransactionModal";
@@ -19,6 +21,15 @@ import CategoryBreakdown from "@/components/dashboard/CategoryBreakdown";
 import MonthlySummary from "@/components/dashboard/MonthlySummary";
 import Link from "next/link";
 
+import { calculateIncome } from "@/lib/analytics/calculateIncome";
+import { calculateExpense } from "@/lib/analytics/calculateExpense";
+import { calculateCashFlow } from "@/lib/analytics/calculateCashFlow";
+import { calculateSavingRate } from "@/lib/analytics/calculateSavingRate";
+import { calculateLargestExpense } from "@/lib/analytics/calculateLargestExpense";
+import { calculateExpenseByCategory } from "@/lib/analytics/calculateExpenseByCategory";
+import { calculateFinancialHealth } from "@/lib/analytics/calculateFinancialHealth";
+import { calculateInsight } from "@/lib/analytics/calculateInsight";
+
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -26,6 +37,47 @@ export default function Home() {
     setTransactions,
     mounted,
   } = useTransactions();
+
+  const income =
+    calculateIncome(transactions);
+
+  const expense =
+    calculateExpense(transactions);
+
+  const cashFlow =
+    calculateCashFlow(
+      income,
+      expense
+    );
+
+  const savingRate =
+    calculateSavingRate(
+      income,
+      expense
+    );
+
+  const largestExpense =
+    calculateLargestExpense(
+      transactions
+    );
+
+  const expenseByCategory =
+    calculateExpenseByCategory(
+      transactions
+    );
+
+  const financialHealth =
+    calculateFinancialHealth(
+      savingRate
+    );
+
+  const insight =
+    calculateInsight(
+      savingRate,
+      largestExpense
+        ? largestExpense.category
+        : "Unknown"
+    );
 
   const {
     cash,
@@ -48,13 +100,13 @@ export default function Home() {
     "Newest" | "Oldest" | "Highest" | "Lowest"
   >("Newest");
 
-    const saving =
-      totalIncome - totalExpense;
-
-    const savingRate =
-      totalIncome === 0
-        ? 0
-        : (saving / totalIncome) * 100;
+  const [dateFilter, setDateFilter] = useState<
+    "All" |
+    "Today" |
+    "Week" |
+    "Month" |
+    "Year"
+  >("All");
   
   const deleteTransaction = (id: number) => {
     const confirmDelete = window.confirm(
@@ -153,6 +205,35 @@ export default function Home() {
               icon={Wallet}
             />
 
+            <StatCard
+              title="Financial Health"
+              value={`${financialHealth.score}/100`}
+              change={financialHealth.label}
+              icon={ShieldCheck}
+            />
+
+            <StatCard
+              title="Largest Expense"
+              value={
+                largestExpense
+                  ? formatCurrency(largestExpense.amount)
+                  : "-"
+              }
+              change={
+                largestExpense
+                  ? largestExpense.category
+                  : "No Expense"
+              }
+              icon={Wallet}
+            />
+
+            <StatCard
+              title="Smart Insight"
+              value={insight.status}
+              change={insight.message}
+              icon={Brain}
+            />
+
             <div
               className="
                 rounded-2xl
@@ -227,13 +308,13 @@ export default function Home() {
 
             <div className="grid gap-6 lg:grid-cols-2 md:col-span-4">              
               <FinanceChart
-                income={totalIncome}
-                expense={totalExpense}
+                income={income}
+                expense={expense}
               />
 
               <MonthlySummary
-                income={totalIncome}
-                expense={totalExpense}
+                income={income}
+                expense={expense}
               />
 
               <CategoryBreakdown
@@ -251,6 +332,8 @@ export default function Home() {
                 setFilter={setFilter}
                 sortBy={sortBy}
                 setSortBy={setSortBy}
+                dateFilter={dateFilter}
+                setDateFilter={setDateFilter}
               />
 
               <div className="mt-4 flex justify-end">

@@ -21,7 +21,6 @@ export function useAssets() {
 
       const parsed: Asset[] = JSON.parse(saved);
 
-      console.log("LOAD ASSETS", parsed);
 
       if (parsed.length > 0) {
         
@@ -60,8 +59,6 @@ export function useAssets() {
   useEffect(() => {
 
     if (!mounted) return;
-
-    console.log("SAVE ASSETS", assets);
 
     localStorage.setItem(
       "assets",

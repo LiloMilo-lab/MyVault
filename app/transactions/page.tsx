@@ -277,7 +277,6 @@ function handleImport(
 
       }));
 
-    console.log(importedTransactions);
     const headers =
       json.length > 0
         ? Object.keys(json[0] as object)
@@ -712,7 +711,6 @@ if (!mounted) return null;
 
               <button
                 onClick={() => {
-                  console.log(fileInputRef.current);
                   fileInputRef.current?.click();
                 }}
                 className="

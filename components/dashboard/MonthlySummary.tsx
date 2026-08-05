@@ -1,4 +1,9 @@
 import { CalendarDays } from "lucide-react";
+
+import { calculateCashFlow } from "@/lib/analytics/calculateCashFlow";
+import { calculateSavingRate } from "@/lib/analytics/calculateSavingRate";
+import { formatCurrency } from "@/lib/format";
+
 type MonthlySummaryProps = {
   income: number;
   expense: number;
@@ -9,15 +14,18 @@ export default function MonthlySummary({
   expense,
 }: MonthlySummaryProps) {
 
-    const saving = income - expense;
-    const savingRate =
-        income === 0
-            ? 0
-            : (saving / income) * 100;
-    
-    console.log(saving);
-    console.log(savingRate);
+const saving =
+  calculateCashFlow(
+    income,
+    expense
+  );
 
+const savingRate =
+  calculateSavingRate(
+    income,
+    expense
+  );
+    
     return (
         <div
             className="
@@ -47,7 +55,7 @@ export default function MonthlySummary({
                     <span>Income</span>
 
                     <span className="text-green-400 font-semibold">
-                        Rp{income.toLocaleString("id-ID")}
+                        {formatCurrency(income)}
                     </span>
 
                 </div>
@@ -57,7 +65,7 @@ export default function MonthlySummary({
                     <span>Expense</span>
 
                     <span className="text-red-400 font-semibold">
-                        Rp{expense.toLocaleString("id-ID")}
+                        {formatCurrency(expense)}
                     </span>
 
                 </div>
@@ -73,7 +81,7 @@ export default function MonthlySummary({
                             : "text-red-400"
                         }`}
                     >
-                        Rp{saving.toLocaleString("id-ID")}
+                        {formatCurrency(saving)}
                     </span>
 
                 </div>

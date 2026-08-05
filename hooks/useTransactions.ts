@@ -13,10 +13,10 @@ export function useTransactions() {
       const parsed: Transaction[] = JSON.parse(saved);
 
       const migrated = parsed.map((transaction) => ({
-        account: "Cash",
-        currency: "IDR",
-        notes: "",
-        ...transaction,
+          ...transaction,
+          account: transaction.account ?? "Cash",
+          currency: transaction.currency ?? "IDR",
+          notes: transaction.notes ?? "",
       }));
 
       setTransactions(migrated);

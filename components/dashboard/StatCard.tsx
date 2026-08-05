@@ -3,7 +3,7 @@ type StatCardProps = {
   title: string;
   value: string;
   change: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
 };
 
 export default function StatCard({
@@ -34,7 +34,9 @@ export default function StatCard({
             {title}
             </p>
 
-            <Icon className="h-6 w-6 text-emerald-400" />
+            {Icon && (
+              <Icon className="h-6 w-6 text-emerald-400" />
+            )}
 
         </div>
 

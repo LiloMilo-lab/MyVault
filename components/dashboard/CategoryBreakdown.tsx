@@ -1,5 +1,9 @@
 import { Transaction } from "@/types/transaction";
 import { PieChart } from "lucide-react";
+
+import { calculateExpenseByCategory } from "@/lib/analytics/calculateExpenseByCategory";
+import { formatCurrency } from "@/lib/format";
+
 type CategoryBreakdownProps = {
   transactions: Transaction[];
 };
@@ -8,19 +12,10 @@ export default function CategoryBreakdown({
     transactions,
 }: CategoryBreakdownProps) {
 
-    const totals: Record<string, number> = {};
-    transactions.forEach((transaction) => {
-        console.log(transaction.category);
-        if (transaction.type === "Expense") {
-            totals[transaction.category] =
-                (totals[transaction.category] || 0)
-                + transaction.amount;
-
-        }
-
-    });
-    
-    const data = Object.entries(totals);
+    const data =
+        calculateExpenseByCategory(
+            transactions
+        );
     if (data.length === 0) {
     return (
         <div
@@ -65,7 +60,9 @@ export default function CategoryBreakdown({
     }
 
     const max = Math.max(
-        ...data.map(([, amount]) => amount),
+        ...data.map(
+            (item) => item.amount
+        ),
         1
     );
 
@@ -94,30 +91,30 @@ export default function CategoryBreakdown({
 
             <div className="space-y-5">
 
-                {data.map(([category, amount]) => (
-                    <div key={category}>
+                {data.map((item) => (
+                    <div key={item.category}>
                         <div className="mb-2 flex justify-between">
                             <span className="font-medium">
-                                {category}
+                                {item.category}
                             </span>
 
                             <span className="text-neutral-400">
-                                Rp{amount.toLocaleString("id-ID")}
+                                {formatCurrency(item.amount)}
                             </span>
                         </div>
 
                         <div className="h-3 rounded-full bg-neutral-800">
                             <div
                                 className="
-                                    h-3 
-                                    rounded-full 
-                                    bg-emerald-500 
+                                    h-3
+                                    rounded-full
+                                    bg-emerald-500
                                     transition-all
                                     duration-500
                                     hover:brightness-110
-                                    "
+                                "
                                 style={{
-                                    width: `${(amount / max) * 100}%`,
+                                    width: `${(item.amount / max) * 100}%`,
                                 }}
                             />
                         </div>
