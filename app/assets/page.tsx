@@ -5,6 +5,8 @@ import AssetCard from "@/components/portfolio/AssetCard";
 import AssetList from "@/components/portfolio/AssetList";
 import AssetAllocation from "@/components/portfolio/AssetAllocation";
 import { useAssets } from "@/hooks/useAssets";
+import { useAccounts } from "@/hooks/useAccounts";
+
 import { formatCurrency } from "@/lib/format";
 import { useState } from "react";
 import AssetModal from "@/components/portfolio/AssetModal";
@@ -19,12 +21,20 @@ import { calculateRecommendation } from "@/lib/portfolio/calculateRecommendation
 import { usePortfolioHistory } from "@/hooks/usePortfolioHistory";
 import PortfolioChart from "@/components/portfolio/PortfolioChart";
 
+import AccountSummary from "@/components/portfolio/AccountSummary";
+
 export default function AssetsPage() {
 const {
     assets,
     setAssets,
     totalAssetValue,
 } = useAssets();
+
+const {
+    accounts,
+    setAccounts,
+    mounted,
+} = useAccounts();
 
 const history =
   usePortfolioHistory(
@@ -110,7 +120,7 @@ const diversificationLabel =
                 {" "}
                 {formatCurrency(totalAssetValue)}
               </p>
-
+              
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
@@ -146,6 +156,11 @@ const diversificationLabel =
                     <AssetAllocation
                       assets={assets}
                       totalAssetValue={totalAssetValue}
+                    />
+
+                    <AccountSummary
+                      accounts={accounts}
+                      setAccounts={setAccounts}
                     />
 
                     <div

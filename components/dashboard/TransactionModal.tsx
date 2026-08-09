@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
-import { syncPortfolio } from "@/lib/syncPortfolio";
 import { useAssets } from "@/hooks/useAssets";
+import { useAccounts } from "@/hooks/useAccounts";
 
 type TransactionModalProps = {
   isOpen: boolean;
@@ -44,6 +44,8 @@ export default function TransactionModal({
   const [account, setAccount] = useState("Cash");
   const [currency, setCurrency] = useState("IDR");
 
+  const { accounts } = useAccounts();
+  
   useEffect(() => {
     if (!isOpen) return;
 
@@ -227,6 +229,30 @@ export default function TransactionModal({
               </select>
           </div>
 
+          <select
+            value={account}
+            onChange={(e) =>
+              setAccount(e.target.value)
+            }
+            className="
+              w-full
+              rounded-xl
+              border
+              border-neutral-700
+              bg-neutral-900
+              p-3
+            "
+          >
+            {accounts.map((acc) => (
+              <option
+                key={acc.id}
+                value={acc.name}
+              >
+                {acc.name}
+              </option>
+            ))}
+          </select>
+
           <div className="mt-4">
             <label className="mb-2 block text-sm text-neutral-400">
               Date
@@ -238,31 +264,6 @@ export default function TransactionModal({
               onChange={(e) => setDate(e.target.value)}
               className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
             />
-          </div>
-
-          <div className="mt-4">
-
-            <label className="mb-2 block text-sm text-neutral-400">
-              Account
-            </label>
-
-            <select
-              value={account}
-              onChange={(e)=>setAccount(e.target.value)}
-              className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
-            >
-
-              <option>Cash</option>
-              <option>BCA</option>
-              <option>Mandiri</option>
-              <option>BRI</option>
-              <option>BNI</option>
-              <option>Dana</option>
-              <option>OVO</option>
-              <option>GoPay</option>
-
-            </select>
-
           </div>
 
           <div className="mt-4">
