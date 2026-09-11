@@ -1,0 +1,19 @@
+export const DEFAULT_EXCHANGE_RATES: Record<string, number> = {
+  IDR_USD: 0.000061,
+  USD_IDR: 16390,
+
+  IDR_SGD: 0.000078,
+  SGD_IDR: 12820,
+
+  IDR_MYR: 0.00025,
+  MYR_IDR: 4000,
+
+  IDR_EUR: 0.000052,
+  EUR_IDR: 19230,
+
+  IDR_JPY: 0.0061,
+  JPY_IDR: 164,
+
+  IDR_GBP: 0.000045,
+  GBP_IDR: 22200,
+};

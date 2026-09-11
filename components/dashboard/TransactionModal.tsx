@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
+import {
+  CurrencyCode,
+  DEFAULT_CURRENCY,
+  SUPPORTED_CURRENCIES,
+} from "@/types/currency";
+
 import { useAssets } from "@/hooks/useAssets";
 import { useAccounts } from "@/hooks/useAccounts";
 
@@ -42,9 +48,13 @@ export default function TransactionModal({
   const [date, setDate] = useState("");
   const [notes, setNotes] = useState("");
   const [account, setAccount] = useState("Cash");
-  const [currency, setCurrency] = useState("IDR");
+  const [currency, setCurrency] =
+    useState<CurrencyCode>(DEFAULT_CURRENCY);
 
   const { accounts } = useAccounts();
+  const selectedAccount = accounts.find(
+    (acc) => acc.name === account
+  );
   
   useEffect(() => {
     if (!isOpen) return;
@@ -119,7 +129,7 @@ export default function TransactionModal({
       );
     } else {
       const newTransaction = {
-      id: editingId ?? Date.now(),
+      id: Date.now(),
       amount: parsedAmount,
       category,
       type,
@@ -274,15 +284,17 @@ export default function TransactionModal({
 
             <select
               value={currency}
-              onChange={(e)=>setCurrency(e.target.value)}
+              onChange={(e) =>
+                setCurrency(e.target.value as CurrencyCode)
+              }
+              disabled={Boolean(selectedAccount)}
               className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
             >
-
-              <option>IDR</option>
-              <option>USD</option>
-              <option>SGD</option>
-              <option>MYR</option>
-
+              {SUPPORTED_CURRENCIES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
             </select>
 
           </div>

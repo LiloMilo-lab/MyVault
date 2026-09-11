@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTransactions } from "./useTransactions";
 import { Account } from "@/types/account";
 import { calculateAccountBalances } from "@/lib/accounts/calculateAccountBalances";
+import { CurrencyCode } from "@/types/currency";
 
 export function useAccounts() {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -18,7 +19,14 @@ export function useAccounts() {
       localStorage.getItem("accounts");
 
     if (stored) {
-      setAccounts(JSON.parse(stored));
+      const parsed: Account[] = JSON.parse(stored);
+
+      const migrated = parsed.map((account) => ({
+        ...account,
+        currency: account.currency ?? "IDR",
+      }));
+
+      setAccounts(migrated);
     } else {
       setAccounts([
         {

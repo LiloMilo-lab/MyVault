@@ -1,3 +1,5 @@
+import { CurrencyCode } from "./currency";
+
 export type AccountType =
   | "Cash"
   | "Bank"
@@ -7,14 +9,9 @@ export type AccountType =
 
 export type Account = {
   id: number;
-
   name: string;
-
   type: AccountType;
-
   balance: number;
-
-  currency: string;
-
+  currency: CurrencyCode;
   color: string;
 };

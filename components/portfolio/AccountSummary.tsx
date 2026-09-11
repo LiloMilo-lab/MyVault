@@ -1,6 +1,13 @@
 import { Account } from "@/types/account";
 import { formatCurrency } from "@/lib/format";
+import { calculateAccountBalanceInIDR } from "@/lib/accounts/calculateAccountBalanceInIDR";
+import {
+  CurrencyCode,
+  DEFAULT_CURRENCY,
+  SUPPORTED_CURRENCIES,
+} from "@/types/currency";
 import { useState } from "react";
+import { useExchangeRates } from "@/hooks/useExchangeRates";
 
 type AccountSummaryProps = {
   accounts: Account[];
@@ -19,6 +26,8 @@ export default function AccountSummary({
   const [type, setType] =
     useState<Account["type"]>("Bank");
 
+  const [currency, setCurrency] =
+    useState<CurrencyCode>(DEFAULT_CURRENCY);
   const addAccount = () => {
     const trimmedName = name.trim();
 
@@ -37,7 +46,7 @@ export default function AccountSummary({
       name: trimmedName,
       type,
       balance: 0,
-      currency: "IDR",
+      currency,
       color: "#10B981",
     };
 
@@ -48,7 +57,14 @@ export default function AccountSummary({
 
     setName("");
     setType("Bank");
+    setCurrency(DEFAULT_CURRENCY);
   };
+
+  const {
+      rates,
+      updatedAt,
+      status: exchangeRateStatus,
+    } = useExchangeRates();
 
   return (
     <div
@@ -88,11 +104,35 @@ export default function AccountSummary({
               </p>
             </div>
 
-            <p className="font-bold text-emerald-400">
-              {formatCurrency(account.balance)}
-            </p>
+            <div className="text-right">
+              <p className="font-bold text-emerald-400">
+                {account.currency}{" "}
+                {account.balance.toLocaleString("en-US")}
+              </p>
+
+              <p className="mt-1 text-sm text-neutral-500">
+                ≈{" "}
+                {formatCurrency(
+                  calculateAccountBalanceInIDR(account, rates)
+                )}
+              </p>
+            </div>
           </div>
         ))}
+
+        <div className="mt-4 text-xs text-neutral-600">
+          FX:{" "}
+          {exchangeRateStatus === "live"
+            ? "Live"
+            : exchangeRateStatus === "cached"
+            ? "Cached"
+            : exchangeRateStatus === "fallback"
+            ? "Fallback"
+            : "Loading"}
+          {updatedAt
+            ? ` • ${new Date(updatedAt).toLocaleString("en-US")}`
+            : ""}
+        </div>
       </div>
 
       <div className="mt-6 border-t border-neutral-800 pt-6">
@@ -146,6 +186,26 @@ export default function AccountSummary({
             <option value="Investment">
               Investment
             </option>
+          </select>
+
+          <select
+            value={currency}
+            onChange={(e) =>
+              setCurrency(e.target.value as CurrencyCode)
+            }
+            className="
+              rounded-xl
+              border
+              border-neutral-700
+              bg-neutral-800
+              p-3
+            "
+          >
+            {SUPPORTED_CURRENCIES.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
           </select>
 
         </div>

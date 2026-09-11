@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Transaction } from "@/types/transaction";
+import { CurrencyCode } from "@/types/currency";
 
 export function useTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -15,8 +16,9 @@ export function useTransactions() {
       const migrated = parsed.map((transaction) => ({
           ...transaction,
           account: transaction.account ?? "Cash",
-          currency: transaction.currency ?? "IDR",
-          notes: transaction.notes ?? "",
+          currency:
+            (transaction.currency as CurrencyCode) ?? "IDR",          
+            notes: transaction.notes ?? "",
       }));
 
       setTransactions(migrated);

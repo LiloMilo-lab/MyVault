@@ -1,3 +1,5 @@
+import { CurrencyCode } from "./currency";
+
 export type Transaction = {
   id: number;
   amount: number;
@@ -6,5 +8,5 @@ export type Transaction = {
   date: string;
   notes: string;
   account: string;
-  currency: string;
+  currency: CurrencyCode;
 };
