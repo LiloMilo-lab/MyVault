@@ -6,6 +6,8 @@ import {
   Briefcase,
   ReceiptText,
   BarChart3,
+  WalletCards,
+  Target,
   Settings,
 } from "lucide-react";
 
@@ -29,6 +31,16 @@ const menuItems = [
     name: "Analytics",
     href: "/analytics",
     icon: BarChart3,
+  },
+  {
+    name: "Budgets",
+    href: "/budgets",
+    icon: WalletCards,
+  },
+  {
+    name: "Goals",
+    href: "/goals",
+    icon: Target,
   },
   {
     name: "Settings",

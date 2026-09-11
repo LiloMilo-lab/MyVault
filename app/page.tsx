@@ -1,6 +1,21 @@
 "use client";
-import Sidebar from "@/components/layout/Sidebar";
+import FinancialAlerts from "@/components/dashboard/FinancialAlerts";
+
+import { generateFinancialAlerts } from "@/lib/alerts/generateFinancialAlerts";
+
+import BudgetSummary from "@/components/dashboard/BudgetSummary";
+import GoalSummary from "@/components/dashboard/GoalSummary";
+
+import QuickActions from "@/components/dashboard/QuickActions";
+
+import { useBudgets } from "@/hooks/useBudgets";
+import { useGoals } from "@/hooks/useGoals";
+
+import { calculateBudgetSummary } from "@/lib/budget/calculateBudgetSummary";
+import { calculateGoalsSummary } from "@/lib/goals/calculateGoalsSummary";
+
 import Header from "@/components/layout/Header";
+import Sidebar from "@/components/layout/Sidebar";
 import StatCard from "@/components/dashboard/StatCard";
 import { dashboardData } from "@/data/dashboard";
 import {
@@ -9,6 +24,8 @@ import {
   TrendingUp,
   ShieldCheck,
   Brain,
+  WalletCards,
+  Target,
 } from "lucide-react";
 import { useState } from "react";
 import TransactionModal from "@/components/dashboard/TransactionModal";
@@ -37,6 +54,14 @@ export default function Home() {
     setTransactions,
     mounted,
   } = useTransactions();
+
+  const {
+    budgets,
+  } = useBudgets();
+
+  const {
+    goals,
+  } = useGoals();
 
   const income =
     calculateIncome(transactions);
@@ -77,6 +102,17 @@ export default function Home() {
       largestExpense
         ? largestExpense.category
         : "Unknown"
+    );
+
+  const budgetSummary =
+    calculateBudgetSummary(
+      budgets,
+      transactions
+    );
+
+  const goalsSummary =
+    calculateGoalsSummary(
+      goals
     );
 
   const {
@@ -169,6 +205,14 @@ export default function Home() {
     const recentTransactions =
       sortedTransactions.slice(0, 5);
 
+    const alerts =
+      generateFinancialAlerts(
+        budgets,
+        goals,
+        transactions,
+        savingRate
+      );
+
   if (!mounted) return null;
 
   return (
@@ -178,7 +222,9 @@ export default function Home() {
 
       <div className="flex flex-1 flex-col">
 
-        <Header />
+        <Header 
+          alerts={alerts}
+        />
 
         <section className="flex-1 p-8">
 
@@ -232,6 +278,28 @@ export default function Home() {
               value={insight.status}
               change={insight.message}
               icon={Brain}
+            />
+
+            <StatCard
+              title="Budget Remaining"
+              value={formatCurrency(
+                budgetSummary.remaining
+              )}
+              change={
+                budgetSummary.exceededCount > 0
+                  ? `${budgetSummary.exceededCount} exceeded`
+                  : "On track"
+              }
+              icon={WalletCards}
+            />
+
+            <StatCard
+              title="Goals Progress"
+              value={`${goalsSummary.progress.toFixed(1)}%`}
+              change={
+                `${goalsSummary.completedGoals}/${goalsSummary.totalGoals} completed`
+              }
+              icon={Target}
             />
 
             <div
@@ -316,6 +384,19 @@ export default function Home() {
                 income={income}
                 expense={expense}
               />
+
+              <BudgetSummary
+                budgets={budgets}
+                transactions={transactions}
+              />
+
+              <GoalSummary
+                goals={goals}
+              />
+
+              <FinancialAlerts alerts={alerts} />
+
+              <QuickActions />
 
               <CategoryBreakdown
                 transactions={transactions}
