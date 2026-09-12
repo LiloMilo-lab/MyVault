@@ -47,6 +47,9 @@ import { calculateExpenseByCategory } from "@/lib/analytics/calculateExpenseByCa
 import { calculateFinancialHealth } from "@/lib/analytics/calculateFinancialHealth";
 import { calculateInsight } from "@/lib/analytics/calculateInsight";
 
+import { useExchangeRates } from "@/hooks/useExchangeRates";
+import { convertTransactionsToIDR } from "@/lib/currency/convertTransactionsToIDR";
+
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -54,6 +57,14 @@ export default function Home() {
     setTransactions,
     mounted,
   } = useTransactions();
+
+  const { rates } = useExchangeRates();
+
+  const transactionsInIDR =
+      convertTransactionsToIDR(
+          transactions,
+          rates
+      );
 
   const {
     budgets,
@@ -64,10 +75,10 @@ export default function Home() {
   } = useGoals();
 
   const income =
-    calculateIncome(transactions);
+    calculateIncome(transactionsInIDR);
 
   const expense =
-    calculateExpense(transactions);
+    calculateExpense(transactionsInIDR);
 
   const cashFlow =
     calculateCashFlow(
@@ -83,12 +94,12 @@ export default function Home() {
 
   const largestExpense =
     calculateLargestExpense(
-      transactions
+      transactionsInIDR
     );
 
   const expenseByCategory =
     calculateExpenseByCategory(
-      transactions
+      transactionsInIDR
     );
 
   const financialHealth =
@@ -107,7 +118,7 @@ export default function Home() {
   const budgetSummary =
     calculateBudgetSummary(
       budgets,
-      transactions
+      transactionsInIDR
     );
 
   const goalsSummary =

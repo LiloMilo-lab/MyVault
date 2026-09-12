@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTransactions } from "./useTransactions";
+import { useExchangeRates } from "./useExchangeRates";
 import { Account } from "@/types/account";
 import { calculateAccountBalances } from "@/lib/accounts/calculateAccountBalances";
 import { CurrencyCode } from "@/types/currency";
@@ -10,6 +11,8 @@ export function useAccounts() {
     const {
         transactions,
     } = useTransactions();
+
+    const { rates } = useExchangeRates();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -47,10 +50,11 @@ export function useAccounts() {
         setAccounts((previousAccounts) =>
             calculateAccountBalances(
                 previousAccounts,
-                transactions
+                transactions,
+                rates
             )
         );
-    }, [transactions, mounted]);
+    }, [transactions, rates, mounted]);
 
   useEffect(() => {
     if (!mounted) return;

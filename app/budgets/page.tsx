@@ -10,6 +10,9 @@ import BudgetCard from "@/components/budget/BudgetCard";
 import { useBudgets } from "@/hooks/useBudgets";
 import { useTransactions } from "@/hooks/useTransactions";
 
+import { useExchangeRates } from "@/hooks/useExchangeRates";
+import { convertTransactionsToIDR } from "@/lib/currency/convertTransactionsToIDR";
+
 export default function BudgetsPage() {
   const {
     budgets,
@@ -19,6 +22,15 @@ export default function BudgetsPage() {
   const {
     transactions,
   } = useTransactions();
+
+  const { rates } = useExchangeRates();
+
+  const transactionsInIDR =
+    convertTransactionsToIDR(
+      transactions,
+      rates
+    );
+
 
   const [category, setCategory] =
     useState("Food");
@@ -255,7 +267,7 @@ export default function BudgetsPage() {
                 <BudgetCard
                   key={budget.id}
                   budget={budget}
-                  transactions={transactions}
+                  transactions={transactionsInIDR}
                   deleteBudget={deleteBudget}
                   editBudget={editBudget}
                 />

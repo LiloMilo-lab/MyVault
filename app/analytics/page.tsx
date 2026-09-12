@@ -19,6 +19,9 @@ import { calculateInsight } from "@/lib/analytics/calculateInsight";
 
 import { formatCurrency } from "@/lib/format";
 
+import { useExchangeRates } from "@/hooks/useExchangeRates";
+import { convertTransactionsToIDR } from "@/lib/currency/convertTransactionsToIDR";
+
 import {
   TrendingUp,
   Wallet,
@@ -37,11 +40,19 @@ export default function AnalyticsPage() {
         mounted,
     } = useTransactions();
 
+    const { rates } = useExchangeRates();
+
+    const transactionsInIDR =
+        convertTransactionsToIDR(
+            transactions,
+            rates
+        );
+
     const income =
-        calculateIncome(transactions);
+        calculateIncome(transactionsInIDR);
 
     const expense =
-        calculateExpense(transactions);
+        calculateExpense(transactionsInIDR);
 
     const savingRate =
         calculateSavingRate(
@@ -51,7 +62,7 @@ export default function AnalyticsPage() {
 
     const largestExpense =
         calculateLargestExpense(
-            transactions
+            transactionsInIDR
         );
 
     const financialHealth =
@@ -69,12 +80,12 @@ export default function AnalyticsPage() {
     
     const trendData =
         calculateTransactionTrend(
-            transactions
+            transactionsInIDR
         );
 
     const topCategory =
         calculateTopExpenseCategory(
-            transactions
+            transactionsInIDR
         );
 
     const topCategoryPercentage =
@@ -84,7 +95,7 @@ export default function AnalyticsPage() {
 
     const averageDailyExpense =
         calculateAverageDailyExpense(
-            transactions
+            transactionsInIDR
         );
 
   return (
@@ -158,7 +169,7 @@ export default function AnalyticsPage() {
                     data={trendData}
                 />
                 <CategoryBreakdown
-                    transactions={transactions}
+                    transactions={transactionsInIDR}
                 />
 
                 <div

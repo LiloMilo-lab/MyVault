@@ -55,6 +55,12 @@ export default function TransactionModal({
   const selectedAccount = accounts.find(
     (acc) => acc.name === account
   );
+
+  useEffect(() => {
+    if (!selectedAccount) return;
+
+    setCurrency(selectedAccount.currency);
+  }, [selectedAccount]);
   
   useEffect(() => {
     if (!isOpen) return;
@@ -284,10 +290,7 @@ export default function TransactionModal({
 
             <select
               value={currency}
-              onChange={(e) =>
-                setCurrency(e.target.value as CurrencyCode)
-              }
-              disabled={Boolean(selectedAccount)}
+              disabled
               className="w-full rounded-xl border border-neutral-700 bg-neutral-800 p-3"
             >
               {SUPPORTED_CURRENCIES.map((item) => (
